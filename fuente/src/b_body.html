@@ -1,0 +1,209 @@
+<div class="wrap">
+  <header class="top">
+    <div class="logo">
+      <svg viewBox="0 0 48 48" aria-hidden="true"><rect x="1" y="1" width="46" height="46" fill="none" stroke="#1F2328" stroke-width="2"/><path d="M7 24c5-7.5 11-11 17-11s12 3.5 17 11c-5 7.5-11 11-17 11S12 31.5 7 24z" fill="none" stroke="#1F2328" stroke-width="2"/><circle cx="27" cy="24" r="6" fill="none" stroke="#1E3F8F" stroke-width="2"/><circle cx="27" cy="24" r="2.4" fill="#1F2328"/></svg>
+      <div><h1>Oculomotor</h1><p>Hoja de exploración · pares craneales III, IV y VI</p></div>
+    </div>
+    <div></div>
+    <div class="status" id="status"></div>
+    <nav class="tabs" role="tablist" aria-label="Secciones">
+      <button role="tab" id="tab-sim" data-tab="sim" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12c3-5 6.5-7.5 10-7.5S19 7 22 12c-3 5-6.5 7.5-10 7.5S5 17 2 12z"/><circle cx="12" cy="12" r="3.2"/></svg>Simulador</button>
+      <button role="tab" id="tab-anat" data-tab="anat" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg>Anatomía 3D</button>
+      <button role="tab" id="tab-dx" data-tab="dx" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 4h6M10 4v5l-5 9a2 2 0 002 3h10a2 2 0 002-3l-5-9V4"/><path d="M8 15h8"/></svg>Diagnóstico</button>
+    </nav>
+  </header>
+
+<main>
+  <!-- ====================== SIMULADOR ====================== -->
+  <section id="view-sim">
+    <div class="grid">
+      <div class="col col-l">
+        <div class="card">
+          <h2>Lesión <small>por ojo o por síndrome</small></h2>
+          <div id="lesionLock" class="lock" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><span>Hay un caso clínico en curso: la lesión está oculta. Explora al paciente aquí o en la pestaña Diagnóstico.</span></div>
+          <div id="lesionCtl">
+            <div id="eyectl-R" class="eyectl"></div>
+            <div id="eyectl-L" class="eyectl"></div>
+            <div class="eyectl">
+              <div class="eyehead"><b>Síndrome</b><span>ambos ojos</span></div>
+              <select id="synSel" aria-label="Síndrome"></select>
+              <div class="seg" id="synSide"><button data-v="R" aria-pressed="true">Lado derecho</button><button data-v="L" aria-pressed="false">Lado izquierdo</button></div>
+              <div class="row"><label for="synSev">Gravedad</label><input type="range" id="synSev" min="10" max="100" step="5" value="100"><output id="synSevO">100 %</output></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h2>Exploración</h2>
+          <div class="ctlblock">
+            <span class="lbl">Mirada</span>
+            <div class="btnrow">
+              <button class="btn primary" id="btnH">Seguimiento en H</button>
+              <button class="btn" id="btnCenter">Posición primaria</button>
+              <button class="btn" id="btnConv" aria-pressed="false">Convergencia</button>
+            </div>
+          </div>
+          <div class="ctlblock">
+            <span class="lbl">Ojo fijador</span>
+            <div class="seg" data-bind="fix"><button data-v="R" aria-pressed="false">OD fija</button><button data-v="L" aria-pressed="true">OI fija</button></div>
+          </div>
+          <div class="ctlblock">
+            <span class="lbl">Oclusor (cover test)</span>
+            <div class="seg" data-bind="cover"><button data-v="" aria-pressed="true">Sin tapar</button><button data-v="R" aria-pressed="false">Tapar OD</button><button data-v="L" aria-pressed="false">Tapar OI</button></div>
+          </div>
+          <div class="ctlblock">
+            <span class="lbl">Cabeza</span>
+            <div class="row"><label for="tilt">Inclinación</label><input type="range" id="tilt" min="-35" max="35" step="1" value="0"><output id="tiltO">0°</output></div>
+            <div class="row"><label for="yaw">Giro de cara</label><input type="range" id="yaw" min="-30" max="30" step="1" value="0"><output id="yawO">0°</output></div>
+            <div class="btnrow">
+              <button class="btn" id="btnComp">Postura compensadora</button>
+              <button class="btn" id="btnHeadReset">Cabeza recta</button>
+            </div>
+          </div>
+          <div class="ctlblock">
+            <label class="row" style="gap:8px;cursor:pointer;align-items:flex-start"><input type="checkbox" id="lift" checked style="margin-top:2px"> <span style="font-size:12.5px;color:var(--ink);white-space:normal">Levantar los párpados para ver el ojo (el explorador sostiene el párpado)</span></label>
+          </div>
+        </div>
+      </div>
+
+      <div class="col col-m">
+        <div class="card stage raised">
+          <div class="stagebar">
+            <b>Inspección <span>· vista del explorador</span></b>
+            <span class="hint">Arrastra sobre el rostro para mover la linterna · el reflejo corneal permite leer Hirschberg</span>
+            <button class="btn sm primary" id="btnCamTop">Activar cámara</button><button class="btn sm" id="goAnat">Ver músculos y nervios en 3D →</button>
+          </div>
+          <div class="facehost" id="host-face"><canvas class="face" id="face" aria-label="Rostro del paciente con ambos ojos"></canvas></div>
+          <div class="readouts">
+            <div class="ro"><div class="k">Horizontal</div><div class="v" id="roH">—</div><div class="s" id="roHs">—</div></div>
+            <div class="ro"><div class="k">Vertical</div><div class="v" id="roV">—</div><div class="s" id="roVs">—</div></div>
+            <div class="ro"><div class="k">Torsión</div><div class="v" id="roT">—</div><div class="s" id="roTs">—</div></div>
+            <div class="ro"><div class="k">Pupilas OD / OI</div><div class="v" id="roP">—</div><div class="s" id="roPs">—</div></div>
+          </div>
+        </div>
+        <div class="card">
+          <h2>Nueve posiciones diagnósticas <small>toca una para mirar ahí · desviación en dioptrías prismáticas (Δ)</small></h2>
+          <canvas class="nine" id="nine" aria-label="Nueve posiciones de la mirada"></canvas>
+        </div>
+        <div class="card" id="interpCard">
+          <h2>Interpretación</h2>
+          <div class="findings" id="findings"></div>
+          <div class="clin" id="clin"></div>
+        </div>
+      </div>
+
+      <div class="col col-r">
+        <div id="simCamSlot"><div class="card" id="camCard">
+          <h2>Cámara <small>explora con tu dedo</small></h2>
+          <div class="camwrap"><video id="camVideo" playsinline muted></video><canvas id="camOverlay"></canvas><div class="camidle" id="camIdle">Enciende la cámara y mueve tu dedo índice frente a ella: los ojos lo siguen como en la exploración. Acerca el dedo a la cámara para ver la convergencia.</div></div>
+          <div class="btnrow" style="margin-top:10px"><button class="btn primary" id="btnCam">Seguir mi dedo</button><select id="camMode" aria-label="Qué detectar" style="width:auto"><option value="hand">Detectar la mano</option><option value="color">Dedal rojo</option></select></div>
+          <div class="row" style="margin-top:8px"><label for="camRange">Amplitud</label><input type="range" id="camRange" min="20" max="50" value="35"><output id="camRangeO">35°</output></div>
+          <label class="row" style="cursor:pointer;margin-top:4px"><input type="checkbox" id="camConv" checked> <span style="font-size:12.5px;color:var(--ink);white-space:normal">Convergencia al acercar el dedo</span></label>
+          <div class="camdiag" id="camDiag"></div>
+          <div class="note" id="camStatus" style="margin-top:8px;color:var(--pen);font-size:13px" role="status" aria-live="polite"></div>
+        </div>
+        </div>
+        <div class="card">
+          <h2>Lo que ve el paciente <small>vidrio rojo en OD</small></h2>
+          <canvas class="patient" id="patient" aria-label="Diplopía percibida por el paciente"></canvas>
+          <div class="note" id="dipNote" style="margin-top:8px"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== ANATOMÍA ====================== -->
+  <section id="view-anat" hidden>
+    <div class="anat">
+      <div>
+        <div class="viewport" id="host-main"><div class="v3msg">Cargando modelo 3D…</div>
+          <div class="vtool" id="vtool">
+            <button class="vbtn" data-view="front">Frontal</button>
+            <button class="vbtn" data-view="top">Superior</button>
+            <button class="vbtn" data-view="side">Lateral</button>
+            <button class="vbtn" data-view="back">Tronco</button>
+            <button class="vbtn" id="btnMove" aria-pressed="false" title="Arrastra piezas para separarlas">Mover piezas</button>
+            <button class="vbtn" id="btnColor" aria-pressed="false">Color por nervio</button>
+          </div>
+          <div class="vfoot">
+            <div class="explode"><b>Descomponer</b><input type="range" id="explode" min="0" max="100" value="0" aria-label="Descomponer el modelo"><button class="vbtn" id="btnReassemble">Reensamblar</button></div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card info" id="infoCard">
+          <div class="type" id="infoType">Pieza seleccionada</div>
+          <h3 id="infoName">Toca cualquier estructura</h3>
+          <div id="infoBody" class="note" style="margin-top:6px">Gira con un dedo o el ratón, acerca con pellizco o rueda. Toca un músculo, nervio, núcleo o vaso para ver su origen, inserción, inervación y perla clínica.</div>
+          <div class="btnrow" style="margin-top:12px">
+            <button class="btn sm" id="btnIsolate" disabled>Aislar</button>
+            <button class="btn sm" id="btnHide" disabled>Ocultar</button>
+            <button class="btn sm" id="btnShowAll">Mostrar todo</button>
+          </div>
+        </div>
+        <div class="card">
+          <h2>Capas</h2>
+          <div class="layers" id="layers"></div>
+          <div class="ctlblock" style="margin-top:12px">
+            <span class="lbl">Etiquetas</span>
+            <div class="seg" id="segLabels"><button data-v="none" aria-pressed="false">Ninguna</button><button data-v="key" aria-pressed="true">Clave</button><button data-v="all" aria-pressed="false">Todas</button></div>
+          </div>
+        </div>
+        <div class="card">
+          <h2>Movimiento <small>ligado al simulador</small></h2>
+          <div class="dragpad" id="dragpad3d" aria-label="Arrastra para mover la linterna"><span class="dp-dot" id="dp-dot"></span><span class="dp-lbl">arrastra la linterna</span></div>
+          <div class="gazepad" id="gazepad3d" style="margin-top:10px"></div>
+          <div class="btnrow" style="margin-top:10px"><button class="btn sm primary" id="btnH3d">Seguimiento en H</button><button class="btn sm" id="btnGoSim">Cambiar lesión</button></div>
+          <div class="note" style="margin-top:8px" id="anatLesion"></div>
+        </div>
+        <div id="anatCamSlot"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== DIAGNÓSTICO ====================== -->
+  <section id="view-dx" hidden>
+    <div class="subtabs" id="dxTabs">
+      <button data-v="case" aria-pressed="true">Caso clínico</button>
+      <button data-v="parks">Tres pasos de Parks</button>
+      <button data-v="tree">Algoritmo de diplopía</button>
+      <button data-v="edit">Mis preguntas</button>
+    </div>
+    <div class="dx">
+      <div id="dxMain" class="card"></div>
+      <aside class="dx-side" id="dxSide">
+        <div class="card stage raised">
+          <div class="stagebar"><b>Explora al paciente</b><span class="hint">arrastra la linterna</span></div>
+          <div class="facehost sm" id="host-face2"><canvas class="face" id="face2" aria-label="Rostro del paciente del caso"></canvas></div>
+          <div style="padding:12px 14px;display:flex;flex-direction:column;gap:10px">
+            <div class="examline" id="examLine">—</div>
+            <div class="examctl">
+              <div class="gazepad" id="gazepad2" style="width:150px"></div>
+              <div class="ctlblock" style="gap:6px">
+                <span class="lbl">Inclinar cabeza</span>
+                <div class="seg" id="tiltSeg2"><button data-v="-25">Izq.</button><button data-v="0" aria-pressed="true">Recta</button><button data-v="25">Der.</button></div>
+                <span class="lbl">Oclusor</span>
+                <div class="seg" data-bind="cover"><button data-v="" aria-pressed="true">No</button><button data-v="R" aria-pressed="false">OD</button><button data-v="L" aria-pressed="false">OI</button></div>
+                <span class="lbl">Fija</span>
+                <div class="seg" data-bind="fix"><button data-v="R" aria-pressed="false">OD</button><button data-v="L" aria-pressed="true">OI</button></div>
+              </div>
+            </div>
+            <div class="btnrow"><button class="btn sm" id="btnConv2" aria-pressed="false">Convergencia</button><button class="btn sm" id="btnH2">Seguimiento en H</button></div>
+          </div>
+        </div>
+        <div class="card">
+          <h2>Lo que ve el paciente</h2>
+          <canvas class="patient" id="patient2" aria-label="Diplopía percibida"></canvas>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+
+</main>
+
+  <footer>
+    <p><b>Cómo funciona el modelo.</b> Cada ojo es una esfera con seis músculos. El eje de tracción de los rectos verticales forma 23° con el eje visual y el de los oblicuos 51°, así que su acción vertical depende de la posición horizontal del ojo. La posición resulta del equilibrio entre la tensión de todos los músculos y la elasticidad orbitaria. El cerebro calcula la inervación que necesita el ojo fijador y envía la misma a los músculos yunta del otro ojo (ley de Hering); por eso, cuando fija el ojo parético, la desviación secundaria es mayor que la primaria. La anatomía 3D está modelada a partir de medidas anatómicas publicadas (espiral de Tillaux, posiciones de ápex, tróclea y poleas); es esquemática, no una segmentación de imágenes.</p>
+    <p>Rostro: escaneo 3D «Infinite» de Lee Perry-Smith, de Infinite Realities (licencia Creative Commons Atribución 3.0), distribuido con los ejemplos de three.js; se abrieron los párpados y se agregaron globos oculares, pestañas y párpados móviles.</p>
+    <p>Modelo didáctico con parámetros aproximados: no reproduce magnitudes de un paciente real. Referencias: Leigh RJ, Zee DS. <em>The Neurology of Eye Movements</em>, 5.ª ed.; Brazis PW, Masdeu JC, Biller J. <em>Localization in Clinical Neurology</em>; von Noorden GK, Campos EC. <em>Binocular Vision and Ocular Motility</em>; Demer JL. The orbital pulley system: a revolution in concepts of orbital anatomy. <em>Ann N Y Acad Sci</em> 2002;956:17-32.</p>
+  </footer>
+</div>
