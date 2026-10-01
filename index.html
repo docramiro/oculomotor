@@ -24,8 +24,24 @@ a.item code{display:block;margin-top:10px;font-family:"IBM Plex Mono",monospace;
 <body>
 <div class="sheet">
   <h1>Doc Ramiro</h1>
-  <p class="sub">Materiales interactivos de neurología y educación médica.</p>
-  <a class="item" href="oculomotor/"><span class="lb">Simulador</span><b>Oculomotor</b><span>Motilidad ocular y parálisis de los pares III, IV y VI: rostro 3D, anatomía de ambas órbitas, casos clínicos y algoritmo de diplopía.</span><code>/oculomotor</code></a>
+  <p class="sub" data-i18n="sub">Materiales interactivos de neurología y educación médica.</p>
+  <a class="item" href="oculomotor/"><span class="lb" data-i18n="tag">Simulador</span><b>Oculomotor</b><span data-i18n="desc">Motilidad ocular y parálisis de los pares III, IV y VI: rostro 3D, anatomía de ambas órbitas, casos clínicos y algoritmo de diplopía.</span><code>/oculomotor</code></a>
 </div>
+<script>
+/* Same language choice as the simulator (?lang=, then the stored choice, then the browser); Spanish is the markup itself. */
+(function(){
+  var T={
+    en:{title:'Doc Ramiro · Materials',sub:'Interactive materials for neurology and medical education.',tag:'Simulator',desc:'Eye motility and palsies of cranial nerves III, IV and VI: 3D face, anatomy of both orbits, clinical cases and a diplopia algorithm.'},
+    fr:{title:'Doc Ramiro · Ressources',sub:'Ressources interactives de neurologie et de pédagogie médicale.',tag:'Simulateur',desc:'Motilité oculaire et paralysies des nerfs crâniens III, IV et VI : visage 3D, anatomie des deux orbites, cas cliniques et algorithme de diplopie.'}
+  };
+  var ok=function(l){return l==='es'||Object.prototype.hasOwnProperty.call(T,l);}, l=null;
+  try{l=new URLSearchParams(location.search).get('lang');}catch(e){}
+  if(!ok(l)){try{l=localStorage.getItem('oculo-lang');}catch(e){}}
+  if(!ok(l))l=(navigator.languages||[navigator.language||'']).map(function(x){return String(x).slice(0,2).toLowerCase();}).filter(ok)[0];
+  if(!ok(l)||l==='es')return;
+  document.documentElement.lang=l; document.title=T[l].title;
+  document.querySelectorAll('[data-i18n]').forEach(function(e){e.textContent=T[l][e.getAttribute('data-i18n')];});
+})();
+</script>
 </body>
 </html>

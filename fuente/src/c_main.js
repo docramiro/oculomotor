@@ -4,10 +4,12 @@ const D2R=Math.PI/180;
 const $=id=>document.getElementById(id);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const MUS=['LR','MR','SR','IR','SO','IO'];
-const SHORT={LR:'RL',MR:'RM',SR:'RS',IR:'RI',SO:'OS',IO:'OI'};
+const tr=window.I18N.t;
+const eyeAb=s=>tr('eye.'+s), musAb=m=>tr('mus.short.'+m);
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
 const NERVE={LR:'n6',MR:'n3',SR:'n3',IR:'n3',SO:'n4',IO:'n3'};
 const T0=15, OBL=0.6, HX=0.15, LIM=50;
-const {CASES,TREE,INFO}=window.OCU_DATA;
+let {CASES,TREE,INFO}=window.OCU_DATA(window.I18N.dict());
 
 /* ================= ENGINE ================= */
 function action(m,h){
@@ -75,28 +77,29 @@ function inverse(E,tgt,cvg,cRef){
 
 /* ================= LESIONS ================= */
 const LES={
-  normal:{label:'Sin lesión',keys:[]},
-  III:{label:'III completo (con pupila)',keys:['MR','SR','IR','IO','LPS','para'],short:'III completo'},
-  IIIps:{label:'III con respeto pupilar',keys:['MR','SR','IR','IO','LPS'],short:'III con respeto pupilar'},
-  IIIsup:{label:'III · división superior',keys:['SR','LPS'],short:'III div. superior'},
-  IIIinf:{label:'III · división inferior',keys:['MR','IR','IO','para'],short:'III div. inferior'},
-  IV:{label:'IV troclear',keys:['SO'],short:'IV'},
-  VI:{label:'VI abducens',keys:['LR'],short:'VI'},
-  INO:{label:'Oftalmoplejía internuclear (FLM)',keys:['ino'],short:'INO'},
-  HOR:{label:'Síndrome de Horner (contraste)',keys:['symp'],short:'Horner'},
-  manual:{label:'Ajuste manual',keys:[],short:'ajuste manual'}
+  normal:{keys:[]},
+  III:{keys:['MR','SR','IR','IO','LPS','para']},
+  IIIps:{keys:['MR','SR','IR','IO','LPS']},
+  IIIsup:{keys:['SR','LPS']},
+  IIIinf:{keys:['MR','IR','IO','para']},
+  IV:{keys:['SO']},
+  VI:{keys:['LR']},
+  INO:{keys:['ino']},
+  HOR:{keys:['symp']},
+  manual:{keys:[]}
 };
 function weaken(E,keys,s){for(const k of keys){if(k==='ino')E.ino=Math.max(E.ino,s);else E[k]=Math.min(E[k],1-s);}}
+const lesLabel=k=>tr('les.'+k+'.label'), lesShort=k=>tr('les.'+k+'.short'), synLabel=k=>tr('syn.'+k);
 const III_ALL=['MR','SR','IR','IO','LPS','para'];
 const SYN={
-  none:{label:'Ninguno'},
-  CS:{label:'Seno cavernoso',f:(ip,co,s)=>weaken(ip,[...III_ALL,'SO','LR','symp'],s)},
-  APEX:{label:'Ápex orbitario',f:(ip,co,s)=>weaken(ip,[...III_ALL,'SO','LR'],s)},
-  VI2:{label:'VI bilateral (hipertensión intracraneal)',f:(ip,co,s)=>{weaken(ip,['LR'],s);weaken(co,['LR'],s);}},
-  IV2:{label:'IV bilateral (traumático)',f:(ip,co,s)=>{weaken(ip,['SO'],s);weaken(co,['SO'],s);}},
-  N3:{label:'Nuclear del III',f:(ip,co,s)=>{weaken(ip,['MR','IR','IO','SR','para'],s);weaken(co,['SR'],s);weaken(ip,['LPS'],s*0.8);weaken(co,['LPS'],s*0.8);}},
-  OAH:{label:'Uno y medio',f:(ip,co,s)=>{weaken(ip,['LR'],s);ip.ino=s;co.ino=s;}},
-  WEB:{label:'Weber (mesencéfalo ventral)',f:(ip,co,s)=>weaken(ip,III_ALL,s)}
+  none:{},
+  CS:{f:(ip,co,s)=>weaken(ip,[...III_ALL,'SO','LR','symp'],s)},
+  APEX:{f:(ip,co,s)=>weaken(ip,[...III_ALL,'SO','LR'],s)},
+  VI2:{f:(ip,co,s)=>{weaken(ip,['LR'],s);weaken(co,['LR'],s);}},
+  IV2:{f:(ip,co,s)=>{weaken(ip,['SO'],s);weaken(co,['SO'],s);}},
+  N3:{f:(ip,co,s)=>{weaken(ip,['MR','IR','IO','SR','para'],s);weaken(co,['SR'],s);weaken(ip,['LPS'],s*0.8);weaken(co,['LPS'],s*0.8);}},
+  OAH:{f:(ip,co,s)=>{weaken(ip,['LR'],s);ip.ino=s;co.ino=s;}},
+  WEB:{f:(ip,co,s)=>weaken(ip,III_ALL,s)}
 };
 const S={
   E:{R:{...NORMAL},L:{...NORMAL}},
@@ -116,13 +119,12 @@ function applyAll(){
   } else { applyLesion('R'); applyLesion('L'); }
 }
 function fixEye(){return S.cover?other(S.cover):S.fix;}
-const sideName=s=>s==='R'?'derecho':'izquierdo';
-const sideShort=s=>s==='R'?'der.':'izq.';
+const noLesion=()=>!S.hidden&&S.syn.k==='none'&&S.les.R==='normal'&&S.les.L==='normal';
 function describeLesion(){
-  if(S.hidden)return 'Lesión oculta';
-  if(S.syn.k!=='none')return SYN[S.syn.k].label+(['VI2','IV2'].includes(S.syn.k)?'':' '+sideShort(S.syn.side));
-  const a=[];for(const s of ['R','L']){const k=S.les[s];if(k!=='normal')a.push(LES[k].short+' '+sideShort(s)+(S.sev[s]<100&&k!=='manual'?` (${S.sev[s]} %)`:''));}
-  return a.length?a.join(' + '):'Sin lesión';
+  if(S.hidden)return tr('stat.hidden');
+  if(S.syn.k!=='none')return ['VI2','IV2'].includes(S.syn.k)?synLabel(S.syn.k):tr('stat.with_side.'+S.syn.side,{les:synLabel(S.syn.k)});
+  const a=[];for(const s of ['R','L']){const k=S.les[s];if(k!=='normal')a.push(tr('stat.with_side.'+s,{les:lesShort(k)})+(S.sev[s]<100&&k!=='manual'?` (${S.sev[s]} %)`:''));}
+  return a.length?a.join(' + '):tr('stat.none');
 }
 function lesionSites(eye){
   const out=new Set(); let aneur=false;
@@ -255,14 +257,18 @@ function drawEye(ctx,side,cx,cy,R,p,E,opt){
   }
   if(opt.covered){
     ctx.save(); ctx.fillStyle='#1B2422'; ctx.globalAlpha=0.9; ctx.beginPath(); ctx.ellipse(cx,cy,Wd*1.18,R*1.08,0,0,7); ctx.fill(); ctx.globalAlpha=1;
-    ctx.fillStyle='#E6EEEB'; ctx.font=`600 ${Math.max(9,R*0.27)}px Archivo, sans-serif`; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('oclusor',cx,cy); ctx.restore();
+    ctx.fillStyle='#E6EEEB'; ctx.font=`600 ${Math.max(9,R*0.27)}px Archivo, sans-serif`; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(tr('cv.occluder'),cx,cy); ctx.restore();
   }
 }
 
 function fmtGaze(x,y){
-  if(Math.abs(x)<1&&Math.abs(y)<1)return 'al frente';
-  const a=[]; if(Math.abs(y)>=1)a.push((y>0?'arriba ':'abajo ')+Math.round(Math.abs(y))+'°'); if(Math.abs(x)>=1)a.push((x>0?'a la derecha ':'a la izquierda ')+Math.round(Math.abs(x))+'°');
+  if(Math.abs(x)<1&&Math.abs(y)<1)return tr('gaze.front');
+  const a=[]; if(Math.abs(y)>=1)a.push(tr(y>0?'gaze.up':'gaze.down',{n:Math.round(Math.abs(y))})); if(Math.abs(x)>=1)a.push(tr(x>0?'gaze.right':'gaze.left',{n:Math.round(Math.abs(x))}));
   return a.join(', ');
+}
+function headText(){
+  const parts=[]; if(S.tilt)parts.push(tr(S.tilt>0?'cv.tilt.R':'cv.tilt.L',{n:Math.abs(S.tilt)})); if(S.yaw)parts.push(tr(S.yaw>0?'cv.yaw.R':'cv.yaw.L',{n:Math.abs(S.yaw)}));
+  return tr('cv.head',{parts:parts.join(' · ')});
 }
 function drawOverlay(cv,store,opts){
   const {w,h,d}=fit(cv); const ctx=cv.getContext('2d'); ctx.setTransform(d,0,0,d,0,0); ctx.clearRect(0,0,w,h);
@@ -271,17 +277,17 @@ function drawOverlay(cv,store,opts){
   const ink='rgba(226,236,232,.85)';
   if(es){ctx.font='600 11px Archivo, sans-serif';ctx.textAlign='center';ctx.fillStyle=ink;
     for(const s of ['R','L']){const e=es[s];
-      if(S.cover===s){ctx.save();ctx.translate(e.x,e.y);ctx.fillStyle='#0E1413';ctx.globalAlpha=.94;ctx.beginPath();ctx.ellipse(0,0,e.r*2.1,e.r*1.7,0,0,7);ctx.fill();ctx.fillRect(-e.r*0.35,e.r*1.4,e.r*0.7,h);ctx.globalAlpha=1;ctx.fillStyle='#DDE8E4';ctx.fillText('oclusor',0,4);ctx.restore();}
-      ctx.fillStyle=ink;ctx.fillText(s==='R'?'OD':'OI',e.x,e.y+e.r*1.75+6);}}
+      if(S.cover===s){ctx.save();ctx.translate(e.x,e.y);ctx.fillStyle='#0E1413';ctx.globalAlpha=.94;ctx.beginPath();ctx.ellipse(0,0,e.r*2.1,e.r*1.7,0,0,7);ctx.fill();ctx.fillRect(-e.r*0.35,e.r*1.4,e.r*0.7,h);ctx.globalAlpha=1;ctx.fillStyle='#DDE8E4';ctx.fillText(tr('cv.occluder'),0,4);ctx.restore();}
+      ctx.fillStyle=ink;ctx.fillText(eyeAb(s),e.x,e.y+e.r*1.75+6);}}
   const tx=cx-S.gaze.x*k, ty=cy-S.gaze.y*k;
   const tg=ctx.createRadialGradient(tx,ty,0,tx,ty,18); tg.addColorStop(0,'rgba(255,214,110,.8)'); tg.addColorStop(1,'rgba(255,214,110,0)');
   ctx.fillStyle=tg; ctx.beginPath(); ctx.arc(tx,ty,18,0,7); ctx.fill();
   ctx.beginPath(); ctx.arc(tx,ty,4.5,0,7); ctx.fillStyle='#FFD36A'; ctx.fill(); ctx.strokeStyle='#5B4312'; ctx.lineWidth=1; ctx.stroke();
   ctx.fillStyle=ink; ctx.font='500 11px Archivo, sans-serif'; ctx.textAlign='left';
-  if(!opts||!opts.compact){ctx.fillText('← derecha del paciente',10,h-10); ctx.textAlign='right'; ctx.fillText('izquierda del paciente →',w-10,h-10);}
-  ctx.textAlign='left'; ctx.fillText('Linterna: '+fmtGaze(S.gaze.x,S.gaze.y),10,18);
-  if(S.tilt||S.yaw){ctx.textAlign='right';const parts=[];if(S.tilt)parts.push('inclinada a la '+(S.tilt>0?'derecha ':'izquierda ')+Math.abs(S.tilt)+'°');if(S.yaw)parts.push('cara a la '+(S.yaw>0?'derecha ':'izquierda ')+Math.abs(S.yaw)+'°');ctx.fillText('Cabeza '+parts.join(' · '),w-10,18);}
-  if(convDeg()>=3){ctx.textAlign='center';ctx.fillStyle='#8FE0D2';ctx.fillText('Convergencia (objetivo cercano)',cx,h-28);}
+  if(!opts||!opts.compact){ctx.fillText(tr('cv.pat_right'),10,h-10); ctx.textAlign='right'; ctx.fillText(tr('cv.pat_left'),w-10,h-10);}
+  ctx.textAlign='left'; ctx.fillText(tr('cv.penlight',{g:fmtGaze(S.gaze.x,S.gaze.y)}),10,18);
+  if(S.tilt||S.yaw){ctx.textAlign='right';ctx.fillText(headText(),w-10,18);}
+  if(convDeg()>=3){ctx.textAlign='center';ctx.fillStyle='#8FE0D2';ctx.fillText(tr('cv.conv'),cx,h-28);}
 }
 function drawFace(cv,disp,store,opts){
   if(EOM.has3D)return drawOverlay(cv,store,opts);
@@ -312,7 +318,7 @@ function drawFace(cv,disp,store,opts){
   drawEye(ctx,'R',-ex+yo*0.35,0,R,disp.R,S.E.R,{reflex:true,lift:S.lift,covered:S.cover==='R'});
   drawEye(ctx,'L', ex+yo*0.35,0,R,disp.L,S.E.L,{reflex:true,lift:S.lift,covered:S.cover==='L'});
   ctx.fillStyle=C.muted; ctx.font='600 11px Archivo, sans-serif'; ctx.textAlign='center';
-  ctx.fillText('OD',-ex+yo*0.35,R*1.3); ctx.fillText('OI',ex+yo*0.35,R*1.3);
+  ctx.fillText(eyeAb('R'),-ex+yo*0.35,R*1.3); ctx.fillText(eyeAb('L'),ex+yo*0.35,R*1.3);
   ctx.restore();
   // penlight target
   const tx=cx-S.gaze.x*k, ty=cy-S.gaze.y*k;
@@ -320,18 +326,18 @@ function drawFace(cv,disp,store,opts){
   ctx.fillStyle=tg; ctx.beginPath(); ctx.arc(tx,ty,16,0,7); ctx.fill();
   ctx.beginPath(); ctx.arc(tx,ty,4.5,0,7); ctx.fillStyle='#FFD36A'; ctx.fill(); ctx.strokeStyle='#5B4312'; ctx.lineWidth=1; ctx.stroke();
   ctx.fillStyle=C.muted; ctx.font='500 11px Archivo, sans-serif'; ctx.textAlign='left';
-  if(!opts||!opts.compact){ctx.fillText('← derecha del paciente',10,h-10); ctx.textAlign='right'; ctx.fillText('izquierda del paciente →',w-10,h-10);}
-  ctx.textAlign='left'; ctx.fillText('Linterna: '+fmtGaze(S.gaze.x,S.gaze.y),10,18);
-  if(S.tilt||S.yaw){ctx.textAlign='right';const parts=[];if(S.tilt)parts.push('inclinada a la '+(S.tilt>0?'derecha ':'izquierda ')+Math.abs(S.tilt)+'°');if(S.yaw)parts.push('cara a la '+(S.yaw>0?'derecha ':'izquierda ')+Math.abs(S.yaw)+'°');ctx.fillText('Cabeza '+parts.join(' · '),w-10,18);}
-  if(convDeg()>=3){ctx.textAlign='center';ctx.fillStyle=C.accent;ctx.fillText('Convergencia (objetivo cercano)',cx,h-26);}
+  if(!opts||!opts.compact){ctx.fillText(tr('cv.pat_right'),10,h-10); ctx.textAlign='right'; ctx.fillText(tr('cv.pat_left'),w-10,h-10);}
+  ctx.textAlign='left'; ctx.fillText(tr('cv.penlight',{g:fmtGaze(S.gaze.x,S.gaze.y)}),10,18);
+  if(S.tilt||S.yaw){ctx.textAlign='right';ctx.fillText(headText(),w-10,18);}
+  if(convDeg()>=3){ctx.textAlign='center';ctx.fillStyle=C.accent;ctx.fillText(tr('cv.conv'),cx,h-26);}
 }
 
 /* nine positions */
 const NINE=[[25,20],[0,20],[-25,20],[25,0],[0,0],[-25,0],[25,-20],[0,-20],[-25,-20]];
 let nineCache=null;
 function devLabel(dv){
-  const parts=[]; if(Math.abs(dv.eso)>=1)parts.push((dv.eso>0?'ET ':'XT ')+Math.round(PD(dv.eso))+'Δ');
-  if(Math.abs(dv.rht)>=1)parts.push((dv.rht>0?'HTD ':'HTI ')+Math.round(PD(dv.rht))+'Δ');
+  const parts=[]; if(Math.abs(dv.eso)>=1)parts.push(tr(dv.eso>0?'dev.et':'dev.xt')+' '+Math.round(PD(dv.eso))+'Δ');
+  if(Math.abs(dv.rht)>=1)parts.push(tr(dv.rht>0?'dev.rht':'dev.lht')+' '+Math.round(PD(dv.rht))+'Δ');
   return parts;
 }
 function drawNine(cv){
@@ -349,7 +355,7 @@ function drawNine(cv){
     drawEye(ctx,'L',ox+R*1.85,oy,R,r.L.p,S.E.L,{reflex:true,lift:true,simple:true});}
     const parts=devLabel(dv);
     ctx.font=`600 ${Math.max(9.5,Math.min(12,cw/13))}px JetBrains Mono, monospace`; ctx.textAlign='center';
-    ctx.fillStyle=parts.length?C.bad:C.muted; ctx.fillText(parts.length?parts.join(' · '):'orto',ox,row*ch+ch*0.9);
+    ctx.fillStyle=parts.length?C.bad:C.muted; ctx.fillText(parts.length?parts.join(' · '):tr('dev.ortho'),ox,row*ch+ch*0.9);
     ctx.strokeStyle=C.line; ctx.lineWidth=1;
     if(col<2){ctx.beginPath();ctx.moveTo((col+1)*cw,row*ch+6);ctx.lineTo((col+1)*cw,row*ch+ch-6);ctx.stroke();}
     if(row<2){ctx.beginPath();ctx.moveTo(col*cw+6,(row+1)*ch);ctx.lineTo(col*cw+cw-6,(row+1)*ch);ctx.stroke();}
@@ -359,12 +365,12 @@ function drawNine(cv){
 /* patient view */
 function diplopiaText(dv){
   const msg=[]; const e=dv.eso, v=dv.rht;
-  if(S.cover)return `Con ${S.cover==='R'?'OD':'OI'} tapado el paciente ve una sola imagen: la diplopía binocular desaparece al ocluir un ojo.`;
-  if(Math.abs(e)>=1.5)msg.push(e>0?`Diplopía horizontal <b>no cruzada</b> (homónima): cada imagen queda del lado de su ojo. Separación ${Math.round(PD(e))}Δ.`:`Diplopía horizontal <b>cruzada</b> (heterónima): cada imagen queda del lado opuesto a su ojo. Separación ${Math.round(PD(e))}Δ.`);
-  if(Math.abs(v)>=1)msg.push(`Diplopía vertical: la imagen más baja pertenece al ojo más alto (${v>0?'OD':'OI'}).`);
-  const tt=Math.abs(dv.extR)>Math.abs(dv.extL)?{s:'OD',t:dv.extR}:{s:'OI',t:dv.extL};
-  if(Math.abs(tt.t)>=2)msg.push(`${tt.s} en ${tt.t>0?'extorsión':'intorsión'} de ${Math.abs(tt.t).toFixed(0)}°: su imagen se ve inclinada.`);
-  return msg.length?msg.join(' '):'Visión única: ambas imágenes caen en la fóvea.';
+  if(S.cover)return tr('dip.covered',{eye:eyeAb(S.cover)});
+  if(Math.abs(e)>=1.5)msg.push(tr(e>0?'dip.uncrossed':'dip.crossed',{n:Math.round(PD(e))}));
+  if(Math.abs(v)>=1)msg.push(tr('dip.vertical',{eye:eyeAb(v>0?'R':'L')}));
+  const tt=Math.abs(dv.extR)>Math.abs(dv.extL)?{s:'R',t:dv.extR}:{s:'L',t:dv.extL};
+  if(Math.abs(tt.t)>=2)msg.push(tr(tt.t>0?'dip.ext':'dip.int',{eye:eyeAb(tt.s),n:Math.abs(tt.t).toFixed(0)}));
+  return msg.length?msg.join(' '):tr('dip.single');
 }
 function drawPatient(cv,dv){
   const {w,h,d}=fit(cv); const ctx=cv.getContext('2d'); ctx.setTransform(d,0,0,d,0,0);
@@ -383,84 +389,68 @@ function drawPatient(cv,dv){
     const col=side==='R'?'#FF5A4A':'#F4F2EA';
     ctx.shadowColor=col; ctx.shadowBlur=14; ctx.fillStyle=col; ctx.globalAlpha=0.88; ctx.fillRect(-3.5,-lenH/2,7,lenH); ctx.restore();
     ctx.fillStyle=side==='R'?'#FF8A7E':C['screen-ink']; ctx.font='600 11px Archivo, sans-serif'; ctx.textAlign='center';
-    ctx.fillText(side==='R'?'OD':'OI',x,y+lenH/2+14);
+    ctx.fillText(eyeAb(side),x,y+lenH/2+14);
   }
-  ctx.fillStyle=C['screen-ink']; ctx.textAlign='left'; ctx.font='500 11px Archivo, sans-serif'; ctx.fillText('Mira: '+fmtGaze(S.gaze.x,S.gaze.y),10,h-10);
+  ctx.fillStyle=C['screen-ink']; ctx.textAlign='left'; ctx.font='500 11px Archivo, sans-serif'; ctx.fillText(tr('cv.looks',{g:fmtGaze(S.gaze.x,S.gaze.y)}),10,h-10);
 }
 
 /* readouts */
 function setRO(id,v,s,bad){const e=$(id);e.textContent=v;e.className='v'+(bad?' bad':'');$(id+'s').textContent=s;}
 function updateReadouts(dv){
-  const e=dv.eso; setRO('roH',Math.abs(e)<1?'orto':`${e>0?'ET':'XT'} ${Math.round(PD(e))}Δ`,Math.abs(e)<1?'sin desviación':`${Math.abs(e).toFixed(1)}° · ${e>0?'endotropia':'exotropia'}`,Math.abs(e)>=1);
-  const v=dv.rht; setRO('roV',Math.abs(v)<1?'orto':`${v>0?'HTD':'HTI'} ${Math.round(PD(v))}Δ`,Math.abs(v)<1?'sin desviación':`${Math.abs(v).toFixed(1)}° · hipertropia ${v>0?'derecha':'izquierda'}`,Math.abs(v)>=1);
-  const tf=t=>Math.abs(t)<1?'0°':`${t>0?'ext':'int'} ${Math.abs(t).toFixed(0)}°`;
-  setRO('roT',`${tf(dv.extR)} / ${tf(dv.extL)}`,'OD / OI respecto a lo esperado',Math.abs(dv.extR)>=2||Math.abs(dv.extL)>=2);
+  const e=dv.eso; setRO('roH',Math.abs(e)<1?tr('dev.ortho'):`${tr(e>0?'dev.et':'dev.xt')} ${Math.round(PD(e))}Δ`,Math.abs(e)<1?tr('ro.none'):tr(e>0?'ro.eso':'ro.exo',{deg:Math.abs(e).toFixed(1)}),Math.abs(e)>=1);
+  const v=dv.rht; setRO('roV',Math.abs(v)<1?tr('dev.ortho'):`${tr(v>0?'dev.rht':'dev.lht')} ${Math.round(PD(v))}Δ`,Math.abs(v)<1?tr('ro.none'):tr(v>0?'ro.rht':'ro.lht',{deg:Math.abs(v).toFixed(1)}),Math.abs(v)>=1);
+  const tf=x=>Math.abs(x)<1?'0°':`${tr(x>0?'dev.ext':'dev.int')} ${Math.abs(x).toFixed(0)}°`;
+  setRO('roT',`${tf(dv.extR)} / ${tf(dv.extL)}`,tr('ro.tors'),Math.abs(dv.extR)>=2||Math.abs(dv.extL)>=2);
   const pR=pupilMM(S.E.R), pL=pupilMM(S.E.L);
-  setRO('roP',`${pR.toFixed(1)} / ${pL.toFixed(1)}`,Math.abs(pR-pL)>=0.5?`anisocoria de ${Math.abs(pR-pL).toFixed(1)} mm`:'isocóricas (mm, luz ambiente)',Math.abs(pR-pL)>=0.5);
+  setRO('roP',`${pR.toFixed(1)} / ${pL.toFixed(1)}`,Math.abs(pR-pL)>=0.5?tr('ro.aniso',{n:Math.abs(pR-pL).toFixed(1)}):tr('ro.iso'),Math.abs(pR-pL)>=0.5);
 }
 function examLine(dv){
   const parts=devLabel(dv); const pR=pupilMM(S.E.R),pL=pupilMM(S.E.L);
-  const tf=t=>Math.abs(t)<2?'':` · ${t>0?'ext':'int'} ${Math.abs(t).toFixed(0)}°`;
-  $('examLine').textContent=`${fmtGaze(S.gaze.x,S.gaze.y)} → ${parts.length?parts.join(' · '):'ortotropia'}${tf(dv.extR)?' · OD'+tf(dv.extR):''}${tf(dv.extL)?' · OI'+tf(dv.extL):''} · pupilas ${pR.toFixed(1)}/${pL.toFixed(1)} mm`;
+  const tf=x=>Math.abs(x)<2?'':` · ${tr(x>0?'dev.ext':'dev.int')} ${Math.abs(x).toFixed(0)}°`;
+  $('examLine').textContent=`${fmtGaze(S.gaze.x,S.gaze.y)} → ${parts.length?parts.join(' · '):tr('exam.ortho')}${tf(dv.extR)?' · '+eyeAb('R')+tf(dv.extR):''}${tf(dv.extL)?' · '+eyeAb('L')+tf(dv.extL):''} · ${tr('exam.pupils',{r:pR.toFixed(1),l:pL.toFixed(1)})}`;
 }
 
-/* interpretation */
-const CLIN={
-  III:{t:'III par completo',p:['Ojo abajo y afuera: el recto lateral (VI) y el oblicuo superior (IV) actúan sin oposición. Ptosis completa por pérdida del elevador. Midriasis arreactiva y pérdida de la acomodación por lesión de las fibras parasimpáticas.','Con la pupila afectada piensa primero en compresión: aneurisma de la arteria comunicante posterior o herniación uncal. Requiere angio-TC o angio-RM urgente.']},
-  IIIps:{t:'III par con respeto pupilar',p:['Misma oftalmoplejía y ptosis, con pupila normal. Las fibras pupilomotoras viajan en la periferia del nervio, irrigadas por vasos piales; la isquemia microvascular daña el centro.','Típico de diabetes e hipertensión; suele recuperarse en 8 a 12 semanas. Vigila la pupila en los primeros días.']},
-  IIIsup:{t:'III par · división superior',p:['Ptosis y limitación de la elevación (recto superior). El III se divide en el seno cavernoso anterior o en la fisura orbitaria superior, así que una lesión divisional orienta a esa región.']},
-  IIIinf:{t:'III par · división inferior',p:['Exotropia con limitación de la aducción y la depresión, y midriasis. El párpado se conserva porque el elevador depende de la división superior.']},
-  IV:{t:'IV par (troclear)',p:['Hipertropia del ojo afectado que aumenta en la mirada contralateral, hacia abajo y al inclinar la cabeza hacia el lado lesionado (Bielschowsky). Extorsión del ojo afectado.','Postura compensadora: cabeza inclinada hacia el lado sano, mentón abajo. El traumatismo es la causa adquirida más frecuente. Por su decusación completa, una lesión nuclear afecta al ojo contralateral.']},
-  VI:{t:'VI par (abducens)',p:['Endotropia con limitación de la abducción. Diplopía horizontal no cruzada que empeora de lejos y hacia el lado lesionado. Postura compensadora: cara girada hacia el lado afectado.','Causas: isquemia microvascular, hipertensión intracraneal (signo falso localizador por el canal de Dorello), tumores del clivus o del ángulo pontocerebeloso, encefalopatía de Wernicke.']},
-  INO:{t:'Oftalmoplejía internuclear (FLM)',p:['Lesión del fascículo longitudinal medial del lado del ojo que no aduce. En la mirada lateral ese ojo se queda corto en aducción y el contralateral presenta nistagmo en abducción. La convergencia se conserva: pruébalo con el botón Convergencia.','Bilateral en una persona joven: esclerosis múltiple. Unilateral en un adulto mayor: infarto del tronco.']},
-  HOR:{t:'Síndrome de Horner (contraste)',p:['No es un par craneal: es la vía simpática. Ptosis leve de 1 a 2 mm (músculo de Müller), miosis y anhidrosis variable; la anisocoria aumenta en la oscuridad. Motilidad normal.']},
-  manual:{t:'Ajuste manual',p:['Cada control es la fuerza del músculo (100 % = normal). Prueba paresias parciales o combinaciones.']},
-  CS:{t:'Síndrome del seno cavernoso',p:['Afecta III, IV, VI, V1 (y V2) y el simpático pericarotídeo: oftalmoplejía dolorosa con pupila media arreactiva e hipoestesia facial. El VI viaja dentro del seno, junto a la carótida; los demás, en la pared lateral.','Causas: fístula carótido-cavernosa, trombosis séptica, aneurisma cavernoso, tumores (meningioma, adenoma hipofisario, metástasis) y síndrome de Tolosa-Hunt.']},
-  APEX:{t:'Síndrome del ápex orbitario',p:['Oftalmoplejía de III, IV y VI con V1 y, además, neuropatía óptica: pérdida visual y defecto pupilar aferente relativo. Sin afección del II se llama síndrome de la fisura orbitaria superior.','Causas: inflamación orbitaria, mucormicosis y aspergilosis en diabéticos, tumores y traumatismo.']},
-  VI2:{t:'Paresia bilateral del VI',p:['Endotropia que aumenta en la mirada a ambos lados. En la hipertensión intracraneal el VI se estira en el canal de Dorello: es un signo falso localizador. Revisa el fondo de ojo.']},
-  IV2:{t:'Parálisis bilateral del IV',p:['Hipertropia que alterna: derecha en la mirada a la izquierda e izquierda en la mirada a la derecha, con Bielschowsky positivo a ambos lados. Suele haber endotropia en V y extorsión grande (más de 10°). Típica del traumatismo craneal grave.']},
-  N3:{t:'Lesión nuclear del III',p:['El subnúcleo del recto superior inerva al RS contralateral y el núcleo caudal central, único, inerva ambos elevadores: una lesión nuclear da ptosis bilateral y debilidad de ambos RS, además del III ipsilateral.','Causas: infartos mesencefálicos paramedianos (arteria de Percheron), tumores, desmielinización.']},
-  OAH:{t:'Síndrome del uno y medio',p:['Lesión del núcleo del VI o la FRPP más el FLM del mismo lado. Hacia el lado de la lesión no se mueve ningún ojo; hacia el otro solo abduce el ojo contralateral, con nistagmo. La convergencia se conserva.','Causas: esclerosis múltiple, infarto o tumor de la protuberancia.']},
-  WEB:{t:'Síndrome de Weber',p:['Lesión del mesencéfalo ventral: fascículo del III y pedúnculo cerebral. III ipsilateral con hemiparesia contralateral. Si afecta el núcleo rojo con temblor contralateral, es síndrome de Benedikt.']}
-};
+/* interpretation: the texts live in the "clin" section of fuente/i18n/<lang>.json */
 function updateClin(){
   const el=$('clin'), f=$('findings');
-  if(S.hidden){el.innerHTML='<p>Caso en curso: la interpretación se muestra al terminar el caso.</p>';f.innerHTML='';return;}
-  const html=[];
-  if(S.syn.k!=='none'){const c=CLIN[S.syn.k];html.push(`<h3>${c.t}${['VI2','IV2'].includes(S.syn.k)?'':' · lado '+sideName(S.syn.side)}${S.syn.sev<100?` · ${S.syn.sev} %`:''}</h3>`+c.p.map(x=>`<p>${x}</p>`).join(''));}
-  else for(const s of ['R','L']){const k=S.les[s];if(k==='normal')continue;const c=CLIN[k];
-    html.push(`<h3>${c.t} · ojo ${sideName(s)}${S.sev[s]<100&&k!=='manual'?` · paresia ${S.sev[s]} %`:''}</h3>`+c.p.map(x=>`<p>${x}</p>`).join(''));}
-  el.innerHTML=html.length?html.join(''):'<p>Ambos ojos sanos. Elige una lesión o un síndrome en el panel de la izquierda.</p>';
+  if(S.hidden){el.innerHTML=`<p>${tr('clinui.running')}</p>`;f.innerHTML='';return;}
+  const html=[], body=c=>c.p.map(x=>`<p>${x}</p>`).join('');
+  if(S.syn.k!=='none'){const c=tr('clin.'+S.syn.k);html.push(`<h3>${c.t}${['VI2','IV2'].includes(S.syn.k)?'':' · '+tr('side.side.'+S.syn.side)}${S.syn.sev<100?` · ${S.syn.sev} %`:''}</h3>`+body(c));}
+  else for(const s of ['R','L']){const k=S.les[s];if(k==='normal')continue;const c=tr('clin.'+k);
+    html.push(`<h3>${c.t} · ${tr('side.eye.'+s)}${S.sev[s]<100&&k!=='manual'?' · '+tr('clinui.paresis',{n:S.sev[s]}):''}</h3>`+body(c));}
+  el.innerHTML=html.length?html.join(''):`<p>${tr('clinui.healthy')}</p>`;
   // findings
   const out=[]; const d0=deviation(compute(0,0)); const F=fixEye();
   const e=d0.eso, v=d0.rht;
-  out.push(['Primaria',(Math.abs(e)<1&&Math.abs(v)<1)?`Ortotropia en posición primaria (fija ${F==='R'?'OD':'OI'}).`:[Math.abs(e)>=1?`${e>0?'Endotropia':'Exotropia'} de ${Math.round(PD(e))}Δ`:'',Math.abs(v)>=1?`hipertropia ${v>0?'derecha':'izquierda'} de ${Math.round(PD(v))}Δ`:''].filter(Boolean).join(' y ')+` con ${F==='R'?'OD':'OI'} fijando.`,Math.abs(e)>=1||Math.abs(v)>=1]);
+  const devs=[Math.abs(e)>=1?tr(e>0?'find.eso':'find.exo',{n:Math.round(PD(e))}):'',Math.abs(v)>=1?tr(v>0?'find.rht':'find.lht',{n:Math.round(PD(v))}):''].filter(Boolean);
+  const dev=devs.length===2?tr('find.both',{a:devs[0],b:devs[1]}):devs[0];
+  out.push([tr('find.primary'),dev?tr('find.fixing',{dev:cap(dev),eye:eyeAb(F)}):tr('find.ortho',{eye:eyeAb(F)}),!!dev]);
   const sick=['R','L'].filter(s=>MUS.some(m=>S.E[s][m]<0.95));
   if(sick.length===1){
     const keep={fix:S.fix,cover:S.cover}; S.cover=''; S.fix=sick[0];
     const d2=deviation(compute(0,0)); S.fix=keep.fix; S.cover=keep.cover;
     const m1=Math.hypot(PD(e),PD(v)), m2=Math.hypot(PD(d2.eso),PD(d2.rht));
-    if(m2>m1+2&&sick[0]!==F)out.push(['Hering',`Si fija el ojo parético la desviación sube a unas ${Math.round(m2)}Δ (desviación secundaria mayor que la primaria).`,false]);
+    if(m2>m1+2&&sick[0]!==F)out.push(['Hering',tr('find.hering',{n:Math.round(m2)}),false]);
   }
-  for(const s of ['R','L']){const o=lidOpen(S.E[s]);if(o<0.95)out.push(['Párpado',`${s==='R'?'OD':'OI'}: ptosis ${o<0.2?'completa':o<0.85?'parcial':'leve'}.`,o<0.85]);}
+  for(const s of ['R','L']){const o=lidOpen(S.E[s]);if(o<0.95)out.push([tr('find.lid_k'),tr(o<0.2?'find.lid.complete':o<0.85?'find.lid.partial':'find.lid.mild',{eye:eyeAb(s)}),o<0.85]);}
   const pR=pupilMM(S.E.R),pL=pupilMM(S.E.L);
   if(Math.abs(pR-pL)>=0.5){const bigS=pR>pL?'R':'L';const E=S.E[bigS];
-    out.push(['Pupila',E.para<0.9?(E.symp<0.9?`Pupila ${bigS==='R'?'derecha':'izquierda'} media y arreactiva: lesión parasimpática y simpática.`:`Midriasis en ${bigS==='R'?'OD':'OI'}: la anisocoria aumenta con la luz.`):`Miosis en ${bigS==='R'?'OI':'OD'}: la anisocoria aumenta en la oscuridad.`,true]);}
-  f.innerHTML=out.map(([k,t,hot])=>`<div class="fnd"><span class="pill${hot?' hot':''}">${k}</span><span>${t}</span></div>`).join('');
+    out.push([tr('find.pupil_k'),E.para<0.9?(E.symp<0.9?tr('find.pupil_mid.'+bigS):tr('find.mydr',{eye:eyeAb(bigS)})):tr('find.mios',{eye:eyeAb(other(bigS))}),true]);}
+  f.innerHTML=out.map(([k,txt,hot])=>`<div class="fnd"><span class="pill${hot?' hot':''}">${k}</span><span>${txt}</span></div>`).join('');
 }
 
 /* ================= CONTROLS ================= */
 const MKEYS=['LR','MR','SR','IR','SO','IO','LPS'];
 function buildEyeCtl(side){
-  const el=$('eyectl-'+side);
-  const opts=Object.entries(LES).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join('');
-  el.innerHTML=`<div class="eyehead"><b>${side==='R'?'Ojo derecho':'Ojo izquierdo'}</b><span>${side==='R'?'OD':'OI'}</span></div>
-  <select id="les-${side}" aria-label="Lesión del ojo ${sideName(side)}">${opts}</select>
-  <div class="row"><label for="sev-${side}">Gravedad</label><input type="range" id="sev-${side}" min="10" max="100" step="5" value="100"><output id="sevO-${side}">100 %</output></div>
-  <details class="manual" id="man-${side}"><summary>Fuerza de cada músculo</summary><div class="mgrid">
-  ${MKEYS.map(m=>`<label for="m-${side}-${m}"><span class="tag" style="background:var(--${m==='LPS'?'n3':NERVE[m]})"></span>${m==='LPS'?'Elevador':SHORT[m]}</label><input type="range" id="m-${side}-${m}" min="0" max="100" step="5" value="100"><output id="mo-${side}-${m}">100</output>`).join('')}
-  <label for="m-${side}-para"><span class="tag" style="background:var(--n3)"></span>Pupila III</label><input type="range" id="m-${side}-para" min="0" max="100" step="5" value="100"><output id="mo-${side}-para">100</output>
-  <label for="m-${side}-symp"><span class="tag" style="background:var(--symp)"></span>Simpático</label><input type="range" id="m-${side}-symp" min="0" max="100" step="5" value="100"><output id="mo-${side}-symp">100</output>
+  const el=$('eyectl-'+side), man=$('man-'+side), open=man&&man.open;
+  const opts=Object.keys(LES).map(k=>`<option value="${k}">${lesLabel(k)}</option>`).join('');
+  el.innerHTML=`<div class="eyehead"><b>${tr('ctl.eye.'+side)}</b><span>${eyeAb(side)}</span></div>
+  <select id="les-${side}" aria-label="${esc(tr('ctl.les_aria.'+side))}">${opts}</select>
+  <div class="row"><label for="sev-${side}">${tr('sim.severity')}</label><input type="range" id="sev-${side}" min="10" max="100" step="5" value="100"><output id="sevO-${side}">100 %</output></div>
+  <details class="manual" id="man-${side}"${open?' open':''}><summary>${tr('ctl.force')}</summary><div class="mgrid">
+  ${MKEYS.map(m=>`<label for="m-${side}-${m}"><span class="tag" style="background:var(--${m==='LPS'?'n3':NERVE[m]})"></span>${m==='LPS'?tr('mus.lps'):musAb(m)}</label><input type="range" id="m-${side}-${m}" min="0" max="100" step="5" value="100"><output id="mo-${side}-${m}">100</output>`).join('')}
+  <label for="m-${side}-para"><span class="tag" style="background:var(--n3)"></span>${tr('mus.para')}</label><input type="range" id="m-${side}-para" min="0" max="100" step="5" value="100"><output id="mo-${side}-para">100</output>
+  <label for="m-${side}-symp"><span class="tag" style="background:var(--symp)"></span>${tr('mus.symp')}</label><input type="range" id="m-${side}-symp" min="0" max="100" step="5" value="100"><output id="mo-${side}-symp">100</output>
   </div></details>`;
   const sel=$('les-'+side);
   sel.addEventListener('change',()=>{S.syn.k='none';$('synSel').value='none';S.les[side]=sel.value;applyAll();syncCtl();changed();});
@@ -486,7 +476,8 @@ function syncCtl(skipSliders){
   document.querySelectorAll('#synSide button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===S.syn.side));
   $('lesionLock').hidden=!S.hidden; $('lesionCtl').hidden=S.hidden;
 }
-$('synSel').innerHTML=Object.entries(SYN).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join('');
+function fillSyn(){$('synSel').innerHTML=Object.keys(SYN).map(k=>`<option value="${k}">${synLabel(k)}</option>`).join('');}
+fillSyn();
 $('synSel').addEventListener('change',e=>{S.syn.k=e.target.value;if(S.syn.k==='none'){S.les.R='normal';S.les.L='normal';}applyAll();syncCtl();changed();});
 $('synSev').addEventListener('input',e=>{S.syn.sev=+e.target.value;applyAll();syncCtl();changed();});
 $('synSide').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;S.syn.side=b.dataset.v;applyAll();syncCtl();changed();});
@@ -502,7 +493,8 @@ function syncSegs(){
   for(const id of ['btnConv','btnConv2'])$(id).setAttribute('aria-pressed',S.conv);
 }
 bindSegs();
-function setHead(t,y){S.tilt=t;S.yaw=y;$('tilt').value=t;$('yaw').value=y;$('tiltO').textContent=(t>0?'D ':t<0?'I ':'')+Math.abs(t)+'°';$('yawO').textContent=(y>0?'D ':y<0?'I ':'')+Math.abs(y)+'°';syncSegs();changed();}
+const headOut=v=>(v?tr(v>0?'ctl.head_out.R':'ctl.head_out.L')+' ':'')+Math.abs(v)+'°';
+function setHead(t,y){S.tilt=t;S.yaw=y;$('tilt').value=t;$('yaw').value=y;$('tiltO').textContent=headOut(t);$('yawO').textContent=headOut(y);syncSegs();changed();}
 $('tilt').addEventListener('input',()=>setHead(+$('tilt').value,S.yaw));
 $('yaw').addEventListener('input',()=>setHead(S.tilt,+$('yaw').value));
 $('btnHeadReset').onclick=()=>setHead(0,0);
@@ -520,9 +512,10 @@ function setGaze(x,y){stopAnim();S.gaze={x,y};dirty=true;syncPads();}
 
 /* gaze pads (3x3) */
 const PADS=[['gazepad2'],['gazepad3d']];
+function padAria(id){$(id).querySelectorAll('button').forEach(b=>{const g=NINE[+b.dataset.i];b.setAttribute('aria-label',tr('gaze.look',{g:fmtGaze(g[0],g[1])}));});}
 function buildPad(id){
   const el=$(id); const lab=['↖','↑','↗','←','•','→','↙','↓','↘'];
-  el.innerHTML=NINE.map((g,i)=>`<button data-i="${i}" aria-label="Mirar ${fmtGaze(g[0],g[1])}">${lab[i]}</button>`).join('');
+  el.innerHTML=NINE.map((g,i)=>`<button data-i="${i}">${lab[i]}</button>`).join(''); padAria(id);
   el.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const [x,y]=NINE[+b.dataset.i];setGaze(x,y);});
 }
 function syncPads(){for(const [id] of PADS){$(id).querySelectorAll('button').forEach(b=>{const [x,y]=NINE[+b.dataset.i];b.classList.toggle('on',Math.abs(S.gaze.x-x)<1&&Math.abs(S.gaze.y-y)<1);});}}
@@ -543,8 +536,9 @@ $('nine').addEventListener('click',e=>{const cv=$('nine');const r=cv.getBounding
 let anim=null;
 const HPATH=[[0,0],[30,0],[30,25],[30,-25],[30,0],[0,0],[-30,0],[-30,25],[-30,-25],[-30,0],[0,0]];
 const HBTNS=['btnH','btnH2','btnH3d'];
-function stopAnim(){anim=null;HBTNS.forEach(id=>$(id).textContent='Seguimiento en H');}
-function startH(){if(anim){stopAnim();return;}S.conv=false;syncSegs();anim={t0:performance.now(),seg:950};HBTNS.forEach(id=>$(id).textContent='Detener');}
+function hLabel(){HBTNS.forEach(id=>$(id).textContent=tr(anim?'sim.stop':'sim.h'));}
+function stopAnim(){anim=null;hLabel();}
+function startH(){if(anim){stopAnim();return;}S.conv=false;syncSegs();anim={t0:performance.now(),seg:950};hLabel();}
 HBTNS.forEach(id=>$(id).onclick=startH);
 function stepAnim(now){
   if(!anim)return;
@@ -574,11 +568,11 @@ $('btnGoSim').onclick=()=>showTab('sim');
 function updateStatus(){
   const st=$('status'); const les=describeLesion();
   const chips=[];
-  if(dxState.running)chips.push(`<span class="fld"><span>Caso</span><b>${esc(dxState.case.titulo)}</b></span>`);
-  else chips.push(`<span class="fld${les==='Sin lesión'?'':' bad'}"><span>Lesión</span><b>${esc(les)}</b></span>`);
-  chips.push(`<span class="fld"><span>Fija</span><b>${fixEye()==='R'?'OD':'OI'}${S.cover?' · tapado '+(S.cover==='R'?'OD':'OI'):''}</b></span>`);
+  if(dxState.running)chips.push(`<span class="fld"><span>${tr('stat.case')}</span><b>${esc(dxState.case.titulo)}</b></span>`);
+  else chips.push(`<span class="fld${noLesion()?'':' bad'}"><span>${tr('stat.lesion')}</span><b>${esc(les)}</b></span>`);
+  chips.push(`<span class="fld"><span>${tr('stat.fix')}</span><b>${eyeAb(fixEye())}${S.cover?' · '+tr('stat.covered',{eye:eyeAb(S.cover)}):''}</b></span>`);
   st.innerHTML=chips.join('');
-  const al=$('anatLesion'); if(al)al.textContent=S.hidden?'Caso en curso: la lesión no se marca en la anatomía hasta terminarlo.':`Lesión actual: ${les}. Las estructuras afectadas se marcan en rojo y los músculos paralizados se ven grises.`;
+  const al=$('anatLesion'); if(al)al.textContent=S.hidden?tr('anat.cur_hidden'):tr('anat.cur',{les});
 }
 
 /* ================= LOOP ================= */
@@ -619,7 +613,7 @@ function cleanCase(c){
   const q=(c.preguntas||[]).filter(x=>x&&x.q&&Array.isArray(x.opts)&&x.opts.length>=2).slice(0,30).map(x=>({q:String(x.q).slice(0,600),opts:x.opts.slice(0,6).map(o=>String(o).slice(0,300)),c:Math.max(0,Math.min(x.opts.length-1,+x.c||0)),fb:String(x.fb||'').slice(0,1200)}));
   const L=c.lesion||{}; const okL=k=>LES[k]&&k!=='manual'?k:'normal';
   const syn=c.syn&&SYN[c.syn.k]?{k:c.syn.k,side:c.syn.side==='L'?'L':'R',sev:Math.max(10,Math.min(100,+c.syn.sev||100))}:null;
-  return {titulo:String(c.titulo||'Caso sin título').slice(0,120),vineta:String(c.vineta||'').slice(0,2000),dx:String(c.dx||'').slice(0,400),extiende:String(c.extiende||''),lesion:{R:okL(L.R),L:okL(L.L)},syn:syn&&syn.k!=='none'?syn:null,preguntas:q,creado:+c.creado||Date.now()};
+  return {titulo:String(c.titulo||tr('case.untitled')).slice(0,120),vineta:String(c.vineta||'').slice(0,2000),dx:String(c.dx||'').slice(0,400),extiende:String(c.extiende||''),lesion:{R:okL(L.R),L:okL(L.L)},syn:syn&&syn.k!=='none'?syn:null,preguntas:q,creado:+c.creado||Date.now()};
 }
 async function initStore(){
   loadLocal();
@@ -637,7 +631,7 @@ async function storeSave(item){
   if(Store.db&&!Store.readonly){
     const id=item._id||('c'+Date.now().toString(36)+Math.random().toString(36).slice(2,6));
     try{await Store.db.collection('casos').doc(id).set(c);return true;}
-    catch(e){if(e&&e.code==='invalid_argument'){Store.readonly=true;Store.msg='No tienes permiso para guardar en el banco compartido; se guardó solo en este navegador.';}else{Store.msg='No se pudo guardar en el banco compartido; se guardó en este navegador.';}}
+    catch(e){if(e&&e.code==='invalid_argument'){Store.readonly=true;Store.msg='ed.e_noperm';}else{Store.msg='ed.e_nosave';}}
   }
   const id=item._id||('l'+Date.now().toString(36));
   const i=Store.items.findIndex(x=>x._id===id); const rec={...c,_id:id,_local:true};
@@ -645,7 +639,7 @@ async function storeSave(item){
 }
 async function storeDelete(id){
   const it=Store.items.find(x=>x._id===id);
-  if(Store.db&&it&&!it._local){try{await Store.db.collection('casos').doc(id).delete();return;}catch(e){Store.msg='No se pudo eliminar del banco compartido.';}}
+  if(Store.db&&it&&!it._local){try{await Store.db.collection('casos').doc(id).delete();return;}catch(e){Store.msg='ed.e_nodel';}}
   Store.items=Store.items.filter(x=>x._id!==id); saveLocal();
 }
 function allCases(){
@@ -686,19 +680,19 @@ function renderDx(){
 function renderCase(m){
   if(!dxState.running&&!dxState.done){
     const list=allCases();
-    m.innerHTML=`<div class="h2">Casos clínicos</div>
-    <p style="font-family:var(--f-text);font-size:17px;margin:0 0 14px;max-width:62ch">La lesión queda oculta. Lee la viñeta, explora al paciente en el panel de la derecha (mirada, inclinación, oclusor, fijación) y responde paso a paso hasta el diagnóstico topográfico.</p>
-    <div class="btnrow" style="margin-bottom:16px"><button class="btn primary" id="caseRandom">Caso aleatorio</button></div>
-    <div class="edlist">${list.map((c,i)=>`<div class="eitem"><div><b>${esc(c.titulo)}</b><small>${caseQuestions(c).length} preguntas${c.custom?' · creado por ti':''}</small></div><button class="btn sm" data-i="${i}">Iniciar</button></div>`).join('')}</div>`;
+    m.innerHTML=`<div class="h2">${tr('case.title')}</div>
+    <p style="font-family:var(--f-text);font-size:17px;margin:0 0 14px;max-width:62ch">${tr('case.intro')}</p>
+    <div class="btnrow" style="margin-bottom:16px"><button class="btn primary" id="caseRandom">${tr('case.random')}</button></div>
+    <div class="edlist">${list.map((c,i)=>`<div class="eitem"><div><b>${esc(c.titulo)}</b><small>${tr('case.nq',{n:caseQuestions(c).length})}${c.custom?' · '+tr('case.mine'):''}</small></div><button class="btn sm" data-i="${i}">${tr('case.start')}</button></div>`).join('')}</div>`;
     $('caseRandom').onclick=()=>startCase(list[Math.floor(Math.random()*list.length)]);
     m.querySelectorAll('.eitem button').forEach(b=>b.onclick=()=>startCase(list[+b.dataset.i]));
     return;
   }
   if(dxState.done&&!dxState.running){
     const cs=dxState.case, ok=dxState.ans.filter(Boolean).length, n=dxState.qs.length;
-    m.innerHTML=`<div class="h2">Resultado</div>
-    <div class="result"><div class="score">${ok}/${n}</div><div><b style="font-size:16px">${esc(cs.titulo)}</b><div style="font-family:var(--f-text);font-size:16px;margin-top:4px">Diagnóstico: ${esc(cs.dx||describeLesion())}</div><div class="note">Lesión cargada en el simulador: ${esc(describeLesion())}</div></div></div>
-    <div class="btnrow" style="margin-top:14px"><button class="btn primary" id="rSim">Ver en el simulador</button><button class="btn" id="rAnat">Ver en anatomía 3D</button><button class="btn" id="rAgain">Otro caso</button></div>`;
+    m.innerHTML=`<div class="h2">${tr('case.result')}</div>
+    <div class="result"><div class="score">${ok}/${n}</div><div><b style="font-size:16px">${esc(cs.titulo)}</b><div style="font-family:var(--f-text);font-size:16px;margin-top:4px">${esc(tr('case.dx',{dx:cs.dx||describeLesion()}))}</div><div class="note">${esc(tr('case.loaded',{les:describeLesion()}))}</div></div></div>
+    <div class="btnrow" style="margin-top:14px"><button class="btn primary" id="rSim">${tr('case.to_sim')}</button><button class="btn" id="rAnat">${tr('case.to_anat')}</button><button class="btn" id="rAgain">${tr('case.again')}</button></div>`;
     $('rSim').onclick=()=>showTab('sim'); $('rAnat').onclick=()=>showTab('anat'); $('rAgain').onclick=()=>{dxState.done=false;renderDx();};
     return;
   }
@@ -708,12 +702,13 @@ function renderCase(m){
   let optsHtml='';
   if(q){optsHtml=q.opts.map((o,i)=>{let cls='opt';if(dxState.picked!=null){if(i===q.c)cls+=' right';else if(i===dxState.picked)cls+=' wrong';}
     return `<button class="${cls}" data-i="${i}" ${dxState.picked!=null?'disabled':''}><b>${letters[i]}</b><span>${esc(o)}</span></button>`;}).join('');}
-  const explore=q&&(q.gaze||q.tilt!=null||q.conv)?`<button class="btn sm hintbtn" id="qExplore">Explorar: ${q.gaze?'mirar '+fmtGaze(q.gaze[0],q.gaze[1]):''}${q.tilt!=null?(q.gaze?' · ':'')+'inclinar la cabeza a la '+(q.tilt>0?'derecha':'izquierda'):''}${q.conv?'pedir convergencia':''}</button>`:'';
-  m.innerHTML=`<div class="h2"><span>Caso · ${esc(cs.titulo)}</span><button class="btn sm ghost" id="caseQuit">Abandonar</button></div>
+  const todo=q?[q.gaze?tr('case.ex_look',{g:fmtGaze(q.gaze[0],q.gaze[1])}):'',q.tilt!=null?tr(q.tilt>0?'case.ex_tilt.R':'case.ex_tilt.L'):'',q.conv?tr('case.ex_conv'):''].filter(Boolean):[];
+  const explore=todo.length?`<button class="btn sm hintbtn" id="qExplore">${esc(tr('case.explore',{what:todo.join(' · ')}))}</button>`:'';
+  m.innerHTML=`<div class="h2"><span>${esc(tr('case.head',{t:cs.titulo}))}</span><button class="btn sm ghost" id="caseQuit">${tr('case.quit')}</button></div>
     <div class="vignette">${esc(cs.vineta)}</div>
     <div class="progress">${prog}</div>
-    ${q?`<div class="note">Pregunta ${qi+1} de ${qs.length}</div><div class="q">${esc(q.q)}</div><div class="opts">${optsHtml}</div>${explore}
-    ${dxState.picked!=null?`<div class="fb ${dxState.picked===q.c?'ok':'no'}"><b>${dxState.picked===q.c?'Correcto.':'Incorrecto.'}</b> ${esc(q.fb)}</div><div class="btnrow" style="margin-top:12px"><button class="btn primary" id="qNext">${qi+1<qs.length?'Siguiente':'Ver diagnóstico'}</button></div>`:''}`:'<p>Este caso no tiene preguntas.</p><button class="btn primary" id="qNext">Ver diagnóstico</button>'}`;
+    ${q?`<div class="note">${tr('case.qn',{i:qi+1,n:qs.length})}</div><div class="q">${esc(q.q)}</div><div class="opts">${optsHtml}</div>${explore}
+    ${dxState.picked!=null?`<div class="fb ${dxState.picked===q.c?'ok':'no'}"><b>${tr(dxState.picked===q.c?'case.right':'case.wrong')}</b> ${esc(q.fb)}</div><div class="btnrow" style="margin-top:12px"><button class="btn primary" id="qNext">${tr(qi+1<qs.length?'case.next':'case.see_dx')}</button></div>`:''}`:`<p>${tr('case.noq')}</p><button class="btn primary" id="qNext">${tr('case.see_dx')}</button>`}`;
   $('caseQuit').onclick=()=>{dxState.done=false;endCase(false);};
   m.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{dxState.picked=+b.dataset.i;dxState.ans.push(dxState.picked===q.c);renderDx();});
   const ex=$('qExplore'); if(ex)ex.onclick=()=>{if(q.gaze)setGaze(q.gaze[0],q.gaze[1]);if(q.tilt!=null)setHead(q.tilt,S.yaw);if(q.conv&&!S.conv)toggleConv();};
@@ -722,7 +717,6 @@ function renderCase(m){
 
 /* Parks three-step */
 const PARKS_M=[['R','SR'],['R','IR'],['R','SO'],['R','IO'],['L','SR'],['L','IR'],['L','SO'],['L','IO']];
-const MNAME={SR:'Recto superior',IR:'Recto inferior',SO:'Oblicuo superior',IO:'Oblicuo inferior'};
 function parksSets(){
   const [s1,s2,s3]=dxState.parks; let set=PARKS_M.map(x=>x.join('-'));
   const keep=a=>{set=set.filter(x=>a.includes(x));};
@@ -733,20 +727,20 @@ function parksSets(){
 }
 function renderParks(m){
   const P=dxState.parks, set=parksSets();
-  const chips=PARKS_M.map(([s,mu])=>{const id=s+'-'+mu;const inn=set.includes(id);return `<div class="mchip${inn?'':' out'}${inn&&set.length===1?' win':''}">${s==='R'?'OD':'OI'} · ${SHORT[mu]}<small>${MNAME[mu]}</small></div>`;}).join('');
-  const step=(n,title,help,opts,val)=>`<div class="step"><h4><span class="n">${n}</span>${title}</h4><div class="note" style="margin-bottom:8px">${help}</div><div class="btnrow">${opts.map(([v,t])=>`<button class="btn sm" data-step="${n}" data-v="${v}" aria-pressed="${val===v}" ${n>1&&!P[n-2]?'disabled':''}>${t}</button>`).join('')}</div></div>`;
+  const chips=PARKS_M.map(([s,mu])=>{const id=s+'-'+mu;const inn=set.includes(id);return `<div class="mchip${inn?'':' out'}${inn&&set.length===1?' win':''}">${eyeAb(s)} · ${musAb(mu)}<small>${tr('mus.name.'+mu)}</small></div>`;}).join('');
+  const step=(n,val)=>`<div class="step"><h4><span class="n">${n}</span>${tr(`parks.s${n}.t`)}</h4><div class="note" style="margin-bottom:8px">${tr(`parks.s${n}.h`)}</div><div class="btnrow">${['R','L'].map(v=>`<button class="btn sm" data-step="${n}" data-v="${v}" aria-pressed="${val===v}" ${n>1&&!P[n-2]?'disabled':''}>${tr(`parks.s${n}.${v}`)}</button>`).join('')}</div></div>`;
   let result='';
-  if(set.length===1&&P[2]){const [s,mu]=set[0].split('-');const nerve=mu==='SO'?'IV par (troclear)':'III par';
-    result=`<div class="leaf" style="margin-top:14px"><h3>${MNAME[mu]} ${sideName(s)}</h3><p>Músculo parético: ${MNAME[mu].toLowerCase()} del ojo ${sideName(s)}, inervado por el ${nerve}. ${mu==='SO'?'Es el resultado más frecuente: la parálisis del IV es la causa principal de diplopía vertical aislada.':'Una paresia aislada de un músculo del III es rara: busca afección de otros músculos del III, miastenia o una causa restrictiva.'}</p><button class="btn primary" id="parksLoad">Cargar en el simulador</button></div>`;}
-  m.innerHTML=`<div class="h2">Tres pasos de Parks-Bielschowsky</div>
-  <p style="font-family:var(--f-text);font-size:16.5px;margin:0 0 6px;max-width:64ch">Para una hipertropia por parálisis de un solo músculo cicloverical. Cada paso descarta la mitad de los candidatos. Mide en el panel de la derecha: la lectura muestra HTD o HTI en dioptrías prismáticas.</p>
+  if(set.length===1&&P[2]){const [s,mu]=set[0].split('-');const mus=tr('mus.name.'+mu).toLowerCase();
+    result=`<div class="leaf" style="margin-top:14px"><h3>${cap(tr('parks.res_title.'+s,{mus}))}</h3><p>${tr('parks.res.'+s,{mus,nerve:tr(mu==='SO'?'parks.nerve4':'parks.nerve3')})} ${tr(mu==='SO'?'parks.so_note':'parks.iii_note')}</p><button class="btn primary" id="parksLoad">${tr('parks.load')}</button></div>`;}
+  m.innerHTML=`<div class="h2">${tr('parks.title')}</div>
+  <p style="font-family:var(--f-text);font-size:16.5px;margin:0 0 6px;max-width:64ch">${tr('parks.intro')}</p>
   <div class="parks">${chips}</div>
   <div class="stepper">
-   ${step(1,'¿Qué ojo está más alto en posición primaria?','Tapa y destapa, o mira el reflejo corneal: el ojo alto tiene el reflejo por debajo del centro de la pupila.',[['R','Hipertropia derecha'],['L','Hipertropia izquierda']],P[0])}
-   ${step(2,'¿Hacia qué lado aumenta la hipertropia?','Mira a la derecha y a la izquierda (flechas del panel) y compara la lectura.',[['R','Mirada a la derecha'],['L','Mirada a la izquierda']],P[1])}
-   ${step(3,'¿Con qué inclinación de la cabeza aumenta?','Inclina la cabeza a cada hombro: la contrarrotación ocular exige intorsión del ojo del lado inclinado.',[['R','Inclinación a la derecha'],['L','Inclinación a la izquierda']],P[2])}
+   ${step(1,P[0])}
+   ${step(2,P[1])}
+   ${step(3,P[2])}
   </div>${result}
-  <div class="btnrow" style="margin-top:14px"><button class="btn ghost" id="parksReset">Reiniciar</button></div>`;
+  <div class="btnrow" style="margin-top:14px"><button class="btn ghost" id="parksReset">${tr('common.reset')}</button></div>`;
   m.querySelectorAll('[data-step]').forEach(b=>b.onclick=()=>{const n=+b.dataset.step;dxState.parks[n-1]=b.dataset.v;for(let i=n;i<3;i++)dxState.parks[i]=null;
     if(n===2)setGaze(b.dataset.v==='R'?25:-25,0); if(n===3)setHead(b.dataset.v==='R'?25:-25,0); renderDx();});
   $('parksReset').onclick=()=>{dxState.parks=[null,null,null];setHead(0,0);setGaze(0,0);renderDx();};
@@ -760,14 +754,14 @@ function renderParks(m){
 /* diplopia tree */
 function renderTree(m){
   const path=dxState.path, node=TREE[path[path.length-1]];
-  const crumbs=path.slice(0,-1).map(id=>`<span>${esc(TREE[id].q?TREE[id].q.replace(/^¿|\?$/g,'').slice(0,34)+'…':'')}</span>`).join('');
+  const crumbs=path.slice(0,-1).map(id=>`<span>${esc(TREE[id].q?TREE[id].q.replace(/^¿|\s*\?$/g,'').slice(0,34)+'…':'')}</span>`).join('');
   let body='';
   if(node.q){body=`<div class="q">${esc(node.q)}</div><div class="opts">${node.opts.map(([t,next],i)=>`<button class="opt" data-next="${next}"><b>${'ABCD'[i]}</b><span>${esc(t)}</span></button>`).join('')}</div>`;}
-  else{body=`<div class="leaf"><h3>${esc(node.dx)}</h3><p>${esc(node.text)}</p><div class="btnrow">${node.load?'<button class="btn primary" id="treeLoad">Cargar un ejemplo en el simulador</button>':''}${node.go?'<button class="btn" id="treeGo">Ir a los tres pasos</button>':''}</div></div>`;}
-  m.innerHTML=`<div class="h2">Algoritmo de diplopía</div>
-  ${path.length>1?`<div class="crumbs">${crumbs}</div>`:'<p style="font-family:var(--f-text);font-size:16.5px;margin:0 0 12px;max-width:64ch">Responde con lo que encuentras en la historia y la exploración. Cada hoja del árbol explica el diagnóstico y puede cargar un ejemplo en el simulador.</p>'}
+  else{body=`<div class="leaf"><h3>${esc(node.dx)}</h3><p>${esc(node.text)}</p><div class="btnrow">${node.load?`<button class="btn primary" id="treeLoad">${tr('treeui.load')}</button>`:''}${node.go?`<button class="btn" id="treeGo">${tr('treeui.go')}</button>`:''}</div></div>`;}
+  m.innerHTML=`<div class="h2">${tr('treeui.title')}</div>
+  ${path.length>1?`<div class="crumbs">${crumbs}</div>`:`<p style="font-family:var(--f-text);font-size:16.5px;margin:0 0 12px;max-width:64ch">${tr('treeui.intro')}</p>`}
   ${body}
-  <div class="btnrow" style="margin-top:14px">${path.length>1?'<button class="btn" id="treeBack">← Atrás</button><button class="btn ghost" id="treeReset">Reiniciar</button>':''}</div>`;
+  <div class="btnrow" style="margin-top:14px">${path.length>1?`<button class="btn" id="treeBack">${tr('treeui.back')}</button><button class="btn ghost" id="treeReset">${tr('common.reset')}</button>`:''}</div>`;
   m.querySelectorAll('[data-next]').forEach(b=>b.onclick=()=>{dxState.path.push(b.dataset.next);renderDx();});
   const bk=$('treeBack'); if(bk)bk.onclick=()=>{dxState.path.pop();renderDx();};
   const rs=$('treeReset'); if(rs)rs.onclick=()=>{dxState.path=['root'];renderDx();};
@@ -776,66 +770,67 @@ function renderTree(m){
 }
 
 /* editor */
-let edit=null, delArm=null;
+let edit=null, delArm=null, formRead=null;
 function blankQ(){return {q:'',opts:['','','',''],c:0,fb:''};}
 function renderEditor(m){
   if(edit)return renderForm(m);
   const items=Store.items;
-  const storeTxt=Store.mode==='db'?(Store.readonly?'Banco compartido (solo lectura para ti)':'Guardado en el banco del artifact: lo ves en cualquier dispositivo'):'Guardado solo en este navegador';
-  m.innerHTML=`<div class="h2"><span>Mis preguntas y casos</span><span class="chip storechip"><i style="background:${Store.mode==='db'?'var(--good)':'var(--n4)'}"></i>${storeTxt}</span></div>
-  <p style="font-family:var(--f-text);font-size:16.5px;margin:0 0 12px;max-width:64ch">Crea un caso nuevo con su viñeta, la lesión oculta y tus preguntas, o agrega preguntas a uno de los casos incluidos. Aparecen en «Caso clínico».</p>
-  ${Store.msg?`<div class="fb no" style="margin-bottom:12px">${esc(Store.msg)}</div>`:''}
-  <div class="btnrow" style="margin-bottom:14px"><button class="btn primary" id="edNew">Nuevo caso</button><button class="btn" id="edAdd">Agregar preguntas a un caso incluido</button></div>
-  <div class="edlist">${items.length?items.map(it=>`<div class="eitem"><div><b>${esc(it.titulo)}</b><small>${(it.preguntas||[]).length} preguntas${it.extiende?' · agregadas a «'+esc((CASES.find(c=>c.id===it.extiende)||{}).titulo||it.extiende)+'»':''}${it._local?' · solo en este navegador':''}</small></div><div class="btnrow"><button class="btn sm" data-a="try" data-id="${esc(it._id)}">Probar</button><button class="btn sm" data-a="edit" data-id="${esc(it._id)}">Editar</button><button class="btn sm danger" data-a="del" data-id="${esc(it._id)}">${delArm===it._id?'¿Eliminar?':'Eliminar'}</button></div></div>`).join(''):'<div class="note">Todavía no tienes casos propios.</div>'}</div>
-  <details style="margin-top:18px"><summary class="lbl" style="cursor:pointer">Exportar o importar (JSON)</summary>
-   <div class="form" style="margin-top:10px"><textarea id="edJson" rows="6" placeholder="Pega aquí un JSON exportado para importarlo"></textarea>
-   <div class="btnrow"><button class="btn sm" id="edExport">Exportar mis casos</button><button class="btn sm" id="edCopy">Copiar</button><button class="btn sm" id="edImport">Importar</button><span class="note" id="edJsonMsg"></span></div></div></details>`;
+  const storeTxt=tr(Store.mode==='db'?(Store.readonly?'ed.store_ro':'ed.store_db'):'ed.store_local');
+  m.innerHTML=`<div class="h2"><span>${tr('ed.title')}</span><span class="chip storechip"><i style="background:${Store.mode==='db'?'var(--good)':'var(--n4)'}"></i>${storeTxt}</span></div>
+  <p style="font-family:var(--f-text);font-size:16.5px;margin:0 0 12px;max-width:64ch">${tr('ed.intro')}</p>
+  ${Store.msg?`<div class="fb no" style="margin-bottom:12px">${esc(tr(Store.msg))}</div>`:''}
+  <div class="btnrow" style="margin-bottom:14px"><button class="btn primary" id="edNew">${tr('ed.new')}</button><button class="btn" id="edAdd">${tr('ed.add')}</button></div>
+  <div class="edlist">${items.length?items.map(it=>`<div class="eitem"><div><b>${esc(it.titulo)}</b><small>${[tr('case.nq',{n:(it.preguntas||[]).length}),it.extiende?esc(tr('ed.added_to',{t:(CASES.find(c=>c.id===it.extiende)||{}).titulo||it.extiende})):'',it._local?tr('ed.local_only'):''].filter(Boolean).join(' · ')}</small></div><div class="btnrow"><button class="btn sm" data-a="try" data-id="${esc(it._id)}">${tr('ed.try')}</button><button class="btn sm" data-a="edit" data-id="${esc(it._id)}">${tr('ed.edit')}</button><button class="btn sm danger" data-a="del" data-id="${esc(it._id)}">${tr(delArm===it._id?'ed.del_confirm':'ed.del')}</button></div></div>`).join(''):`<div class="note">${tr('ed.empty')}</div>`}</div>
+  <details style="margin-top:18px"><summary class="lbl" style="cursor:pointer">${tr('ed.io')}</summary>
+   <div class="form" style="margin-top:10px"><textarea id="edJson" rows="6" placeholder="${esc(tr('ed.io_ph'))}"></textarea>
+   <div class="btnrow"><button class="btn sm" id="edExport">${tr('ed.export')}</button><button class="btn sm" id="edCopy">${tr('ed.copy')}</button><button class="btn sm" id="edImport">${tr('ed.import')}</button><span class="note" id="edJsonMsg"></span></div></div></details>`;
   $('edNew').onclick=()=>{edit={titulo:'',vineta:'',dx:'',extiende:'',lesion:{R:'normal',L:'normal'},syn:null,preguntas:[blankQ()]};renderDx();};
-  $('edAdd').onclick=()=>{edit={titulo:'Preguntas extra',vineta:'',dx:'',extiende:CASES[0].id,lesion:{R:'normal',L:'normal'},syn:null,preguntas:[blankQ()]};renderDx();};
+  $('edAdd').onclick=()=>{edit={titulo:tr('ed.extra_title'),vineta:'',dx:'',extiende:CASES[0].id,lesion:{R:'normal',L:'normal'},syn:null,preguntas:[blankQ()]};renderDx();};
   m.querySelectorAll('[data-a]').forEach(b=>b.onclick=async()=>{
     const it=Store.items.find(x=>x._id===b.dataset.id); if(!it)return;
     if(b.dataset.a==='edit'){edit=JSON.parse(JSON.stringify(it));renderDx();}
     if(b.dataset.a==='del'){if(delArm===it._id){delArm=null;await storeDelete(it._id);renderDx();}else{delArm=it._id;renderDx();setTimeout(()=>{if(delArm===it._id){delArm=null;if(dxState.mode==='edit'&&!edit)renderDx();}},3500);}}
     if(b.dataset.a==='try'){const base=it.extiende?CASES.find(c=>c.id===it.extiende):null;startCase(base||{...it,id:'u:'+it._id});}
   });
-  $('edExport').onclick=()=>{$('edJson').value=JSON.stringify({casos:Store.items.map(({_id,_local,...r})=>r)},null,1);$('edJsonMsg').textContent='Listo: copia el texto.';};
+  $('edExport').onclick=()=>{$('edJson').value=JSON.stringify({casos:Store.items.map(({_id,_local,...r})=>r)},null,1);$('edJsonMsg').textContent=tr('ed.m_export');};
   $('edCopy').onclick=()=>{const t=$('edJson');const v=t.value;if(!v)return;
-    const fallback=()=>{t.focus();t.select();$('edJsonMsg').textContent='Texto seleccionado: cópialo con el menú.';};
-    try{navigator.clipboard.writeText(v).then(()=>{$('edJsonMsg').textContent='Copiado.';},fallback);}catch(e){fallback();}};
-  $('edImport').onclick=async()=>{let data;try{data=JSON.parse($('edJson').value);}catch(e){$('edJsonMsg').textContent='El texto no es un JSON válido.';return;}
+    const fallback=()=>{t.focus();t.select();$('edJsonMsg').textContent=tr('ed.m_select');};
+    try{navigator.clipboard.writeText(v).then(()=>{$('edJsonMsg').textContent=tr('ed.m_copied');},fallback);}catch(e){fallback();}};
+  $('edImport').onclick=async()=>{let data;try{data=JSON.parse($('edJson').value);}catch(e){$('edJsonMsg').textContent=tr('ed.m_badjson');return;}
     const arr=Array.isArray(data)?data:(data&&Array.isArray(data.casos)?data.casos:[]);
-    if(!arr.length){$('edJsonMsg').textContent='No encontré casos en el JSON.';return;}
-    for(const c of arr.slice(0,100))await storeSave(c); $('edJsonMsg').textContent=`Importados: ${Math.min(arr.length,100)}.`; if(Store.mode!=='db')renderDx();};
+    if(!arr.length){$('edJsonMsg').textContent=tr('ed.m_nocases');return;}
+    for(const c of arr.slice(0,100))await storeSave(c); $('edJsonMsg').textContent=tr('ed.m_imported',{n:Math.min(arr.length,100)}); if(Store.mode!=='db')renderDx();};
 }
 function renderForm(m){
-  const e=edit; const lesOpts=sel=>Object.entries(LES).filter(([k])=>k!=='manual').map(([k,v])=>`<option value="${k}" ${sel===k?'selected':''}>${v.label}</option>`).join('');
+  const e=edit; formRead=readForm;
+  const lesOpts=sel=>Object.keys(LES).filter(k=>k!=='manual').map(k=>`<option value="${k}" ${sel===k?'selected':''}>${lesLabel(k)}</option>`).join('');
   const synK=e.syn?e.syn.k:'none';
-  m.innerHTML=`<div class="h2"><span>${e._id?'Editar':'Nuevo'}</span></div>
+  m.innerHTML=`<div class="h2"><span>${tr(e._id?'form.edit':'form.new')}</span></div>
   <div class="form">
-   <div><label class="lbl" for="fExt">Tipo</label><select id="fExt"><option value="">Caso nuevo independiente</option>${CASES.map(c=>`<option value="${c.id}" ${e.extiende===c.id?'selected':''}>Agregar preguntas a «${esc(c.titulo)}»</option>`).join('')}</select></div>
-   <div><label class="lbl" for="fTit">Título</label><input type="text" id="fTit" value="${esc(e.titulo)}" maxlength="120"></div>
-   <div class="caseonly"><label class="lbl" for="fVin">Viñeta clínica</label><textarea id="fVin" rows="4" maxlength="2000">${esc(e.vineta)}</textarea></div>
-   <div class="caseonly"><label class="lbl" for="fDx">Diagnóstico (se muestra al final)</label><input type="text" id="fDx" value="${esc(e.dx)}" maxlength="400"></div>
+   <div><label class="lbl" for="fExt">${tr('form.type')}</label><select id="fExt"><option value="">${tr('form.standalone')}</option>${CASES.map(c=>`<option value="${c.id}" ${e.extiende===c.id?'selected':''}>${esc(tr('form.extend',{t:c.titulo}))}</option>`).join('')}</select></div>
+   <div><label class="lbl" for="fTit">${tr('form.title')}</label><input type="text" id="fTit" value="${esc(e.titulo)}" maxlength="120"></div>
+   <div class="caseonly"><label class="lbl" for="fVin">${tr('form.vignette')}</label><textarea id="fVin" rows="4" maxlength="2000">${esc(e.vineta)}</textarea></div>
+   <div class="caseonly"><label class="lbl" for="fDx">${tr('form.dx')}</label><input type="text" id="fDx" value="${esc(e.dx)}" maxlength="400"></div>
    <div class="caseonly two">
-     <div><label class="lbl" for="fR">Lesión oculta · OD</label><select id="fR">${lesOpts(e.lesion.R)}</select></div>
-     <div><label class="lbl" for="fL">Lesión oculta · OI</label><select id="fL">${lesOpts(e.lesion.L)}</select></div>
-     <div><label class="lbl" for="fSyn">o síndrome</label><select id="fSyn">${Object.entries(SYN).map(([k,v])=>`<option value="${k}" ${synK===k?'selected':''}>${v.label}</option>`).join('')}</select></div>
-     <div><label class="lbl" for="fSide">Lado del síndrome</label><select id="fSide"><option value="R" ${e.syn&&e.syn.side==='L'?'':'selected'}>Derecho</option><option value="L" ${e.syn&&e.syn.side==='L'?'selected':''}>Izquierdo</option></select></div>
+     <div><label class="lbl" for="fR">${tr('form.les',{eye:eyeAb('R')})}</label><select id="fR">${lesOpts(e.lesion.R)}</select></div>
+     <div><label class="lbl" for="fL">${tr('form.les',{eye:eyeAb('L')})}</label><select id="fL">${lesOpts(e.lesion.L)}</select></div>
+     <div><label class="lbl" for="fSyn">${tr('form.or_syn')}</label><select id="fSyn">${Object.keys(SYN).map(k=>`<option value="${k}" ${synK===k?'selected':''}>${synLabel(k)}</option>`).join('')}</select></div>
+     <div><label class="lbl" for="fSide">${tr('form.syn_side')}</label><select id="fSide"><option value="R" ${e.syn&&e.syn.side==='L'?'':'selected'}>${tr('form.right')}</option><option value="L" ${e.syn&&e.syn.side==='L'?'selected':''}>${tr('form.left')}</option></select></div>
    </div>
-   <div class="caseonly"><button class="btn sm" id="fTake" type="button">Usar la lesión actual del simulador</button></div>
+   <div class="caseonly"><button class="btn sm" id="fTake" type="button">${tr('form.take')}</button></div>
    <div id="fQs" class="form"></div>
-   <div class="btnrow"><button class="btn sm" id="fAddQ" type="button">+ Pregunta</button></div>
-   <div class="btnrow"><button class="btn primary" id="fSave" type="button">Guardar</button><button class="btn ghost" id="fCancel" type="button">Cancelar</button><span class="note" id="fMsg"></span></div>
+   <div class="btnrow"><button class="btn sm" id="fAddQ" type="button">${tr('form.add_q')}</button></div>
+   <div class="btnrow"><button class="btn primary" id="fSave" type="button">${tr('form.save')}</button><button class="btn ghost" id="fCancel" type="button">${tr('form.cancel')}</button><span class="note" id="fMsg"></span></div>
   </div>`;
   const syncType=()=>m.querySelectorAll('.caseonly').forEach(x=>x.hidden=!!$('fExt').value);
   $('fExt').onchange=()=>{readForm();syncType();}; syncType();
   const renderQs=()=>{
     $('fQs').innerHTML=e.preguntas.map((q,qi)=>`<div class="qblock" data-q="${qi}">
-      <div class="row" style="justify-content:space-between"><b style="font-size:13px">Pregunta ${qi+1}</b><button class="btn sm danger" data-rmq="${qi}" type="button">Quitar</button></div>
-      <textarea data-f="q" rows="2" placeholder="Texto de la pregunta">${esc(q.q)}</textarea>
-      ${q.opts.map((o,oi)=>`<div class="optrow"><input type="radio" name="c${qi}" value="${oi}" ${q.c===oi?'checked':''} aria-label="Marcar opción ${'ABCDEF'[oi]} como correcta"><input type="text" data-o="${oi}" value="${esc(o)}" placeholder="Opción ${'ABCDEF'[oi]}"><button class="btn sm ghost" data-rmo="${oi}" type="button" ${q.opts.length<=2?'disabled':''} aria-label="Quitar opción">×</button></div>`).join('')}
-      <div class="btnrow"><button class="btn sm" data-addo="${qi}" type="button" ${q.opts.length>=6?'disabled':''}>+ Opción</button><span class="note">Marca con el círculo la respuesta correcta.</span></div>
-      <textarea data-f="fb" rows="2" placeholder="Retroalimentación (por qué es correcta)">${esc(q.fb)}</textarea></div>`).join('');
+      <div class="row" style="justify-content:space-between"><b style="font-size:13px">${tr('form.qn',{n:qi+1})}</b><button class="btn sm danger" data-rmq="${qi}" type="button">${tr('form.remove')}</button></div>
+      <textarea data-f="q" rows="2" placeholder="${esc(tr('form.q_ph'))}">${esc(q.q)}</textarea>
+      ${q.opts.map((o,oi)=>`<div class="optrow"><input type="radio" name="c${qi}" value="${oi}" ${q.c===oi?'checked':''} aria-label="${esc(tr('form.mark_aria',{l:'ABCDEF'[oi]}))}"><input type="text" data-o="${oi}" value="${esc(o)}" placeholder="${esc(tr('form.opt_ph',{l:'ABCDEF'[oi]}))}"><button class="btn sm ghost" data-rmo="${oi}" type="button" ${q.opts.length<=2?'disabled':''} aria-label="${esc(tr('form.rm_opt_aria'))}">×</button></div>`).join('')}
+      <div class="btnrow"><button class="btn sm" data-addo="${qi}" type="button" ${q.opts.length>=6?'disabled':''}>${tr('form.add_opt')}</button><span class="note">${tr('form.mark_note')}</span></div>
+      <textarea data-f="fb" rows="2" placeholder="${esc(tr('form.fb_ph'))}">${esc(q.fb)}</textarea></div>`).join('');
     $('fQs').querySelectorAll('[data-rmq]').forEach(b=>b.onclick=()=>{readForm();e.preguntas.splice(+b.dataset.rmq,1);if(!e.preguntas.length)e.preguntas.push(blankQ());renderQs();});
     $('fQs').querySelectorAll('[data-addo]').forEach(b=>b.onclick=()=>{readForm();e.preguntas[+b.dataset.addo].opts.push('');renderQs();});
     $('fQs').querySelectorAll('[data-rmo]').forEach(b=>b.onclick=()=>{readForm();const qi=+b.closest('.qblock').dataset.q;const q=e.preguntas[qi];q.opts.splice(+b.dataset.rmo,1);q.c=Math.min(q.c,q.opts.length-1);renderQs();});
@@ -852,49 +847,44 @@ function renderForm(m){
   $('fCancel').onclick=()=>{edit=null;renderDx();};
   $('fSave').onclick=async()=>{readForm();
     const qs=e.preguntas.map(q=>({...q,opts:q.opts.map(o=>o.trim()).filter(Boolean)})).filter(q=>q.q.trim()&&q.opts.length>=2);
-    if(!e.extiende&&!e.vineta.trim()){$('fMsg').textContent='Escribe la viñeta del caso.';return;}
-    if(!qs.length){$('fMsg').textContent='Agrega al menos una pregunta con dos opciones.';return;}
+    if(!e.extiende&&!e.vineta.trim()){$('fMsg').textContent=tr('form.e_vignette');return;}
+    if(!qs.length){$('fMsg').textContent=tr('form.e_noq');return;}
     await storeSave({...e,preguntas:qs}); edit=null; renderDx();};
 }
 
 
 /* ================= CÁMARA Y ROBOT ================= */
 const Cam={on:false,stream:null,mode:'hand',lm:null,loading:false,sm:null,lastSeen:0,small:null};
-const CAM_BLOCKED='No se pudo abrir la cámara. Si abriste la app dentro de Claude o dentro de Moodle, ábrela directamente en su propia pestaña (tu dirección https). Mientras tanto puedes arrastrar la linterna.';
-function camMsg(t){$('camStatus').textContent=t;}
+function camMsg(k,suffix){Cam.msg=[k,suffix||''];$('camStatus').textContent=tr(k)+(suffix||'');}
+function camLabel(){$('btnCam').textContent=tr(Cam.on?'cam.off':'cam.follow');$('btnCamTop').textContent=tr(Cam.on?'cam.active':'cam.activate');}
 async function loadHand(){
-  if(Cam.lm||Cam.loading)return; Cam.loading=true; camMsg('Cargando el detector de manos…');
+  if(Cam.lm||Cam.loading)return; Cam.loading=true; camMsg('cam.loading');
   try{
     const mp=await import('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.0.1/vision_bundle.mjs');
     const fs=await mp.FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.0.1/wasm');
     const opts=d=>({baseOptions:{modelAssetPath:'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task',delegate:d},runningMode:'VIDEO',numHands:1});
     try{Cam.lm=await mp.HandLandmarker.createFromOptions(fs,opts('GPU'));}catch(e){Cam.lm=await mp.HandLandmarker.createFromOptions(fs,opts('CPU'));}
-    camMsg('Listo: mueve tu dedo índice frente a la cámara. Acércalo para ver la convergencia.');
-  }catch(e){Cam.mode='color';$('camMode').value='color';camMsg('No se pudo cargar el detector de manos (requiere internet). Cambié al modo «Dedal rojo»: ponte algo rojo en la punta del dedo.');}
+    camMsg('cam.ready');
+  }catch(e){Cam.mode='color';$('camMode').value='color';camMsg('cam.hand_fail');}
   Cam.loading=false;
 }
 async function camStart(){
-  if(!window.isSecureContext){camMsg('La cámara solo funciona en páginas https. Abre la dirección que empieza con https://.');camHelp('http');return;}
-  if(!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)){camMsg(CAM_BLOCKED);return;}
-  camMsg('Pidiendo permiso para la cámara… si el navegador muestra un aviso arriba, pulsa «Permitir».');
+  if(!window.isSecureContext){camMsg('cam.https_only');camHelp('http');return;}
+  if(!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)){camMsg('cam.blocked');return;}
+  camMsg('cam.asking');
   const tries=[{video:{facingMode:'user',width:{ideal:640},height:{ideal:480}},audio:false},{video:true,audio:false}];
   let err=null;
   for(const c of tries){try{Cam.stream=await navigator.mediaDevices.getUserMedia(c);err=null;break;}catch(e){err=e;if(e&&e.name==='NotAllowedError')break;}}
   if(!Cam.stream){const n=err&&err.name;
-    const M={NotAllowedError:'El permiso de la cámara está bloqueado. En Chrome toca el candado (o el ícono de ajustes) junto a la dirección → Cámara → Permitir, y recarga la página. En Mac revisa también Configuración del Sistema → Privacidad y seguridad → Cámara → activa Chrome.',
-      NotFoundError:'No se encontró ninguna cámara en este equipo.',
-      NotReadableError:'La cámara está ocupada por otra aplicación (Zoom, Teams, FaceTime…). Ciérrala y vuelve a intentar.',
-      OverconstrainedError:'La cámara no aceptó la configuración pedida.',
-      SecurityError:CAM_BLOCKED};
-    camMsg((M[n]||CAM_BLOCKED)+(n?' ('+n+')':''));if(n==='NotAllowedError'||n==='SecurityError')camHelp('denied');camDiag();return;}
+    camMsg(n&&window.I18N.has('cam.err.'+n)?'cam.err.'+n:'cam.blocked',n?' ('+n+')':'');if(n==='NotAllowedError'||n==='SecurityError')camHelp('denied');camDiag();return;}
   const v=$('camVideo'); v.srcObject=Cam.stream; try{await v.play();}catch(e){}
-  Cam.on=true; stopAnim(); S.conv=false; syncSegs(); $('camIdle').hidden=true; $('btnCam').textContent='Apagar cámara'; $('btnCamTop').textContent='Cámara activa'; const hp=$('camHelp'); if(hp)hp.hidden=true; camDiag();
-  if(Cam.mode==='hand')loadHand(); else camMsg('Modo dedal rojo: mueve la punta roja frente a la cámara.');
+  Cam.on=true; stopAnim(); S.conv=false; syncSegs(); $('camIdle').hidden=true; camLabel(); const hp=$('camHelp'); if(hp)hp.hidden=true; camDiag();
+  if(Cam.mode==='hand')loadHand(); else camMsg('cam.red_mode');
   requestAnimationFrame(camLoop);
 }
 function camStop(){
   Cam.on=false; if(Cam.stream)Cam.stream.getTracks().forEach(t=>t.stop()); Cam.stream=null;
-  $('camIdle').hidden=false; $('btnCam').textContent='Seguir mi dedo'; $('btnCamTop').textContent='Activar cámara'; S.verg=0; Cam.sm=null; changed();
+  $('camIdle').hidden=false; camLabel(); S.verg=0; Cam.sm=null; changed();
   const ov=$('camOverlay'); ov.getContext('2d').clearRect(0,0,ov.width,ov.height);
 }
 function findRed(v){
@@ -927,21 +917,16 @@ $('btnCam').onclick=()=>{Cam.on?camStop():camStart();};
 $('btnCamTop').onclick=()=>{const c=$('camCard');if(c&&c.scrollIntoView)c.scrollIntoView({behavior:'smooth',block:'center'});if(!Cam.on)camStart();};
 function platform(){const u=navigator.userAgent;if(/iPhone|iPad|iPod/.test(u))return 'ios';if(/Android/.test(u))return 'android';if(/Mac/.test(u))return 'mac';return 'other';}
 function camHelp(kind){
-  const p=platform(); let steps;
-  if(kind==='http')steps=['Cierra esta página.','Abre la dirección escribiéndola con <b>https://</b> al principio.'];
-  else if(p==='ios')steps=['Abre <b>Ajustes</b> del iPhone → <b>Safari</b> (o <b>Chrome</b>) → <b>Cámara</b> → <b>Preguntar</b> o <b>Permitir</b>.','En Safari toca <b>aA</b> junto a la dirección → <b>Configuración del sitio web</b> → <b>Cámara: Permitir</b>.','Recarga la página y toca <b>Activar cámara</b>.'];
-  else if(p==='android')steps=['Toca el ícono junto a la dirección (candado o ajustes) → <b>Permisos</b> → <b>Cámara: Permitir</b>.','Si no aparece, ve a <b>Ajustes del teléfono → Apps → Chrome → Permisos → Cámara → Permitir</b>.','Recarga la página y toca <b>Activar cámara</b>.'];
-  else if(p==='mac')steps=['Toca el ícono a la izquierda de la dirección → <b>Cámara: Permitir</b>.','Revisa <b>Configuración del Sistema → Privacidad y seguridad → Cámara</b> y activa tu navegador; ciérralo con Cmd + Q y ábrelo de nuevo.','Recarga la página y toca <b>Activar cámara</b>.'];
-  else steps=['Toca el ícono a la izquierda de la dirección → <b>Cámara: Permitir</b>.','Revisa en la configuración del sistema que el navegador tenga acceso a la cámara.','Recarga la página y toca <b>Activar cámara</b>.'];
+  Cam.help=kind; const steps=tr('cam.help.'+(kind==='http'?'http':platform()));
   let el=$('camHelp'); if(!el){el=document.createElement('div');el.id='camHelp';el.className='camhelp';$('camStatus').after(el);}
-  el.innerHTML='<b>Cómo activar la cámara</b><ol>'+steps.map(x=>'<li>'+x+'</li>').join('')+'</ol>'; el.hidden=false;
+  el.innerHTML='<b>'+tr('cam.help_title')+'</b><ol>'+steps.map(x=>'<li>'+x+'</li>').join('')+'</ol>'; el.hidden=false;
 }
 async function camDiag(){
   const d=$('camDiag'); if(!d)return; const parts=[];
-  const sec=window.isSecureContext; parts.push(`<span class="${sec?'ok':'no'}">${sec?'https ✓':'sin https ✗'}</span>`);
-  const api=!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia); parts.push(`<span class="${api?'ok':'no'}">${api?'cámara disponible ✓':'cámara no disponible aquí ✗'}</span>`);
+  const sec=window.isSecureContext; parts.push(`<span class="${sec?'ok':'no'}">${tr(sec?'cam.diag.https_ok':'cam.diag.https_no')}</span>`);
+  const api=!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia); parts.push(`<span class="${api?'ok':'no'}">${tr(api?'cam.diag.api_ok':'cam.diag.api_no')}</span>`);
   let st='';try{if(navigator.permissions&&navigator.permissions.query){const r=await navigator.permissions.query({name:'camera'});st=r.state;r.onchange=()=>camDiag();}}catch(e){}
-  if(st)parts.push(`<span class="${st==='denied'?'no':'ok'}">permiso: ${st==='granted'?'permitido ✓':st==='denied'?'bloqueado ✗':'se pedirá al activar'}</span>`);
+  if(st)parts.push(`<span class="${st==='denied'?'no':'ok'}">${tr('cam.diag.perm',{s:tr(st==='granted'?'cam.diag.granted':st==='denied'?'cam.diag.denied':'cam.diag.prompt')})}</span>`);
   d.innerHTML=parts.join('');
   if(!sec)camHelp('http'); else if(st==='denied')camHelp('denied');
 }
@@ -958,7 +943,24 @@ dp.addEventListener('pointerup',()=>dpDrag=false);dp.addEventListener('pointerca
 function updateDragDot(){if(S.tab!=='anat')return;const d=$('dp-dot');d.style.left=(50-S.gaze.x/80*100)+'%';d.style.top=(50-S.gaze.y/64*100)+'%';}
 
 /* ================= API FOR 3D ================= */
-const EOM=window.EOM={S,MUS,NERVE,T0,INFO,get disp(){return disp;},cur:null,lesionSites,describeLesion,setGaze,startH,showTab,onTab:null,markDirty:()=>{dirty=true;nineNeeds=true;}};
+const EOM=window.EOM={S,MUS,NERVE,T0,get INFO(){return INFO;},get disp(){return disp;},onLang:null,cur:null,lesionSites,describeLesion,setGaze,startH,showTab,onTab:null,markDirty:()=>{dirty=true;nineNeeds=true;}};
+
+/* ================= LANGUAGE ================= */
+/* Hot switch: static markup is re-applied by I18N.set(); everything built from script is rebuilt here. */
+function relabel(){
+  if(edit&&formRead&&$('fExt'))formRead();
+  ({CASES,TREE,INFO}=window.OCU_DATA(window.I18N.dict()));
+  if(dxState.case){const c=allCases().find(x=>x.id===dxState.case.id);if(c){dxState.case=c;dxState.qs=caseQuestions(c);}}
+  buildEyeCtl('R');buildEyeCtl('L');fillSyn();PADS.forEach(([id])=>padAria(id));
+  hLabel();camLabel();if(Cam.msg)camMsg(Cam.msg[0],Cam.msg[1]);camDiag();
+  const hp=$('camHelp');if(hp&&!hp.hidden)camHelp(Cam.help);
+  syncCtl();setHead(S.tilt,S.yaw);renderDx();
+  if(EOM.onLang)EOM.onLang();
+}
+const langSel=$('langSel');
+langSel.innerHTML=window.I18N.langs.map(([k,n])=>`<option value="${k}">${esc(n)}</option>`).join('');
+langSel.value=window.I18N.lang;
+langSel.onchange=()=>{window.I18N.set(langSel.value);relabel();};
 
 /* ================= INIT ================= */
 function tabify(root){(root||document).querySelectorAll('.card>h2:first-child,.card>.h2:first-child').forEach(h=>{if(h.querySelector('.tabl'))return;const t=[...h.childNodes].find(n=>n.nodeType===3&&n.textContent.trim());if(t){const sp=document.createElement('span');sp.className='tabl';sp.textContent=t.textContent.trim();h.replaceChild(sp,t);}else{const f=h.firstElementChild;if(f&&f.tagName==='SPAN'&&!f.classList.contains('chip'))f.classList.add('tabl');}});}
