@@ -211,6 +211,13 @@ layersEl.innerHTML=LAYERS.map(([k,t,c])=>`<label><input type="checkbox" id="ly-$
 LAYERS.forEach(([k])=>document.getElementById('ly-'+k).addEventListener('change',e=>{layerOn[k]=e.target.checked;lastKey='';}));
 function segWire(id,fn){const el=document.getElementById(id);if(!el)return;el.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;el.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));fn(b.dataset.v);});}
 segWire('segLabels',v=>{labelMode=v;});
+/* tono de piel: three multiplica la textura por material.color; se divide el tono deseado por el color medio de la textura (SKIN[0], escaneo original) para que el resultado se parezca a la muestra */
+const SKIN=['#c29b8d','#b48a6a','#94694a','#6f4a32','#47301f'], skinBase=new THREE.Color(SKIN[0]), wetBase=H.wet.color.clone();
+function setSkin(i){const c=H.material.color.set(SKIN[i]||SKIN[0]);c.setRGB(Math.min(1,c.r/skinBase.r),Math.min(1,c.g/skinBase.g),Math.min(1,c.b/skinBase.b));H.wet.color.copy(wetBase).multiply(c);lastKey='';EOM.markDirty&&EOM.markDirty();}
+let skin=0;try{skin=+localStorage.getItem('oculo-piel')||0;}catch(e){}
+document.getElementById('segSkin').innerHTML=SKIN.map((c,i)=>`<button data-v="${i}" aria-label="${i+1}" aria-pressed="${i===skin}" style="background:${c}"></button>`).join('');
+setSkin(skin);
+segWire('segSkin',v=>{setSkin(v);try{localStorage.setItem('oculo-piel',v);}catch(e){}});
 document.getElementById('explode').addEventListener('input',e=>{explodeT=e.target.value/100;reassemble=null;});
 document.getElementById('btnReassemble').onclick=()=>{reassemble={t0:performance.now(),from:explodeV,users:allParts().map(p=>[p,p.user.clone()])};document.getElementById('explode').value=0;explodeT=0;};
 const btnMove=document.getElementById('btnMove');btnMove.onclick=()=>{moveMode=!moveMode;btnMove.setAttribute('aria-pressed',moveMode);};

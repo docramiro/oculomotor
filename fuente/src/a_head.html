@@ -153,6 +153,8 @@ canvas.patient{display:block;width:100%;aspect-ratio:4/3;max-width:100%;border-r
 .layers{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 .layers label{display:flex;align-items:center;gap:7px;font-size:12.5px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;cursor:pointer;background:var(--panel2)}
 .layers label i{width:10px;height:10px;border-radius:3px;flex:none}
+#segSkin button{height:28px}
+#segSkin button[aria-pressed="true"]::after{content:"✓";color:#fff;text-shadow:0 0 3px #000}
 .info h3{font-size:18px;margin:0 0 2px;letter-spacing:-.01em}
 .info .type{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .info dl{display:grid;grid-template-columns:92px 1fr;gap:6px 10px;margin:12px 0 0;font-size:13px}
