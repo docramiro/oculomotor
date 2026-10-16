@@ -1,15 +1,15 @@
 <div class="wrap">
   <header class="top">
     <div class="logo">
-      <svg viewBox="0 0 48 48" aria-hidden="true"><rect x="1" y="1" width="46" height="46" fill="none" stroke="#1F2328" stroke-width="2"/><path d="M7 24c5-7.5 11-11 17-11s12 3.5 17 11c-5 7.5-11 11-17 11S12 31.5 7 24z" fill="none" stroke="#1F2328" stroke-width="2"/><circle cx="27" cy="24" r="6" fill="none" stroke="#1E3F8F" stroke-width="2"/><circle cx="27" cy="24" r="2.4" fill="#1F2328"/></svg>
+      <img src="logo.svg" alt="">
       <div><h1>Oculomotor</h1><p data-i18n="hdr.sub"></p></div>
     </div>
     <div style="justify-self:end"><select id="langSel" data-i18n-aria-label="hdr.lang_aria" style="width:auto"></select></div>
     <div class="status" id="status"></div>
     <nav class="tabs" role="tablist" data-i18n-aria-label="hdr.nav_aria">
-      <button role="tab" id="tab-sim" data-tab="sim" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12c3-5 6.5-7.5 10-7.5S19 7 22 12c-3 5-6.5 7.5-10 7.5S5 17 2 12z"/><circle cx="12" cy="12" r="3.2"/></svg><span data-i18n="hdr.tab.sim"></span></button>
-      <button role="tab" id="tab-anat" data-tab="anat" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg><span data-i18n="hdr.tab.anat"></span></button>
-      <button role="tab" id="tab-dx" data-tab="dx" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 4h6M10 4v5l-5 9a2 2 0 002 3h10a2 2 0 002-3l-5-9V4"/><path d="M8 15h8"/></svg><span data-i18n="hdr.tab.dx"></span></button>
+      <button role="tab" id="tab-sim" data-tab="sim" aria-selected="true"><!--svg:tab-sim--><span data-i18n="hdr.tab.sim"></span></button>
+      <button role="tab" id="tab-anat" data-tab="anat" aria-selected="false"><!--svg:tab-anat--><span data-i18n="hdr.tab.anat"></span></button>
+      <button role="tab" id="tab-dx" data-tab="dx" aria-selected="false"><!--svg:tab-dx--><span data-i18n="hdr.tab.dx"></span></button>
     </nav>
   </header>
 
@@ -20,7 +20,7 @@
       <div class="col col-l">
         <div class="card">
           <h2><span data-i18n="sim.lesion"></span> <small data-i18n="sim.lesion_sub"></small></h2>
-          <div id="lesionLock" class="lock" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><span data-i18n="sim.lock"></span></div>
+          <div id="lesionLock" class="lock" hidden><!--svg:lock--><span data-i18n="sim.lock"></span></div>
           <div id="lesionCtl">
             <div id="eyectl-R" class="eyectl"></div>
             <div id="eyectl-L" class="eyectl"></div>

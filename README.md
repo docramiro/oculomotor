@@ -29,11 +29,13 @@ El código y los contenidos propios se publican con licencia **MIT** (archivo `L
 
 ## Código fuente
 
-La carpeta `fuente/` contiene el código editable. `oculomotor/index.html` se genera a partir de él.
+La carpeta `fuente/` contiene el código editable. `oculomotor/index.html`, `oculomotor/style.css` y `oculomotor/logo.svg` se generan a partir de él.
 
 | Archivo | Contenido |
 |---|---|
-| `fuente/src/a_head.html` | Estilos (tema «hoja de exploración») |
+| `fuente/src/a_head.html` | Título y fuentes del `<head>` |
+| `fuente/src/style.css` | Estilos (tema «hoja de exploración») |
+| `fuente/src/icons/*.svg` | Iconos (insertados en el HTML) y logo (`oculomotor/logo.svg`) |
 | `fuente/src/b_body.html` | Estructura de la página |
 | `fuente/src/c_main.js` | Modelo biomecánico, lesiones, casos, algoritmo de diplopía, cámara |
 | `fuente/src/d_three.js` | Vista 3D (three.js): rostro, órbitas, músculos y nervios |
