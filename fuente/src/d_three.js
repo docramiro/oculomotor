@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 /*__HEAD3D__*/
 const EOM=window.EOM;
+const i18n=window.I18N.t;
 const D2R=Math.PI/180, RG=12, XM=-31;
 const V=(x,y,z)=>new THREE.Vector3(x,y,z);
 const hosts={main:document.getElementById('host-main'),face:document.getElementById('host-face'),face2:document.getElementById('host-face2')};
@@ -187,29 +188,36 @@ function bsOff(side){const p=SIDES.R.parts.brainstem.g.position;return side==='R
 /* ---------- labels (right side + midline) ---------- */
 const SR_=SIDES.R;
 const LABELS=[
- ['Recto superior','SR',()=>SR_.bands.SR.pointAt(.55,-2.5),'',1],['Recto inferior','IR',()=>SR_.bands.IR.pointAt(.55,-2.5),'',1],['Recto medial','MR',()=>SR_.bands.MR.pointAt(.5,-2.5),'',1],['Recto lateral','LR',()=>SR_.bands.LR.pointAt(.5,-2.5),'',1],
- ['Oblicuo superior','SO',()=>SR_.bands.SOb.pointAt(.5,-2),'',1],['Oblicuo inferior','IO',()=>SR_.bands.IO.pointAt(.35,-2),'',1],['Elevador del párpado','LPS',()=>SR_.bands.LPS.pointAt(.5,-1.5),'',0],
- ['Tróclea','SO',()=>TROCH.clone(),'',1],['Anillo de Zinn','annulus',()=>V(-11,-5.5,-38.5),'',0],['Nervio óptico','optic',()=>V(-10.5,1.5,-33),'',1],['Fisura orbitaria superior','bone',()=>V(4,8.5,-33.5),'',0],
- ['III par','III',()=>V(XM+12.5,3,-72),'n3',1],['División superior','IIIsup',()=>V(-4.5,6.5,-27),'n3',0],['División inferior','IIIinf',()=>V(-10,-3.5,-31),'n3',0],['Ganglio ciliar','cil',()=>V(-4.3,-1.9,-27.2),'n3',0],
- ['IV par','IV',()=>V(XM+15.6,0.5,-96),'n4',1],['VI par','VI',()=>V(XM+9,-21,-79),'n6',1],['Canal de Dorello','VI',()=>V(XM+13,-11,-68),'n6',0],
- ['Seno cavernoso','cs',()=>V(-16.8,9,-55),'',1],['Carótida interna','vasos',()=>V(-17.5,-8,-64),'vas',0],['A. comunicante posterior','vasos',()=>V(XM+11,1.5,-77),'vas',0],['A. cerebral posterior','vasos',()=>V(XM+19,2,-99),'vas',0],['A. cerebelosa superior','vasos',()=>V(XM+15,-3.5,-94),'vas',0],['A. basilar','vasos',()=>V(XM,-24,-88),'vas',0],
- ['Núcleo del III','brainstem',()=>V(XM+2,6,-100),'n3',1],['Edinger-Westphal','brainstem',()=>V(XM+0.9,8.4,-102),'',0],['Núcleo del IV','brainstem',()=>V(XM-2,1,-104),'n4',0],['Núcleo del VI','brainstem',()=>V(XM+2.5,-13,-106),'n6',1],['FRPP','brainstem',()=>V(XM+3.2,-15.5,-100.5),'',0],['FLM','brainstem',()=>V(XM+1.8,-3,-103.6),'',1],
- ['Mesencéfalo','brainstem',()=>V(XM-12,7,-100),'',0],['Protuberancia','brainstem',()=>V(XM-16,-15,-100),'',0],
- ['OD','globe',()=>V(0,-16,6),'',1]
+ ['lab.SR','SR',()=>SR_.bands.SR.pointAt(.55,-2.5),'',1],['lab.IR','IR',()=>SR_.bands.IR.pointAt(.55,-2.5),'',1],['lab.MR','MR',()=>SR_.bands.MR.pointAt(.5,-2.5),'',1],['lab.LR','LR',()=>SR_.bands.LR.pointAt(.5,-2.5),'',1],
+ ['lab.SO','SO',()=>SR_.bands.SOb.pointAt(.5,-2),'',1],['lab.IO','IO',()=>SR_.bands.IO.pointAt(.35,-2),'',1],['lab.LPS','LPS',()=>SR_.bands.LPS.pointAt(.5,-1.5),'',0],
+ ['lab.trochlea','SO',()=>TROCH.clone(),'',1],['lab.annulus','annulus',()=>V(-11,-5.5,-38.5),'',0],['lab.optic','optic',()=>V(-10.5,1.5,-33),'',1],['lab.sof','bone',()=>V(4,8.5,-33.5),'',0],
+ ['lab.III','III',()=>V(XM+12.5,3,-72),'n3',1],['lab.IIIsup','IIIsup',()=>V(-4.5,6.5,-27),'n3',0],['lab.IIIinf','IIIinf',()=>V(-10,-3.5,-31),'n3',0],['lab.cil','cil',()=>V(-4.3,-1.9,-27.2),'n3',0],
+ ['lab.IV','IV',()=>V(XM+15.6,0.5,-96),'n4',1],['lab.VI','VI',()=>V(XM+9,-21,-79),'n6',1],['lab.dorello','VI',()=>V(XM+13,-11,-68),'n6',0],
+ ['lab.cs','cs',()=>V(-16.8,9,-55),'',1],['lab.ica','vasos',()=>V(-17.5,-8,-64),'vas',0],['lab.pcom','vasos',()=>V(XM+11,1.5,-77),'vas',0],['lab.pca','vasos',()=>V(XM+19,2,-99),'vas',0],['lab.sca','vasos',()=>V(XM+15,-3.5,-94),'vas',0],['lab.basilar','vasos',()=>V(XM,-24,-88),'vas',0],
+ ['lab.n3nuc','brainstem',()=>V(XM+2,6,-100),'n3',1],['lab.ew','brainstem',()=>V(XM+0.9,8.4,-102),'',0],['lab.n4nuc','brainstem',()=>V(XM-2,1,-104),'n4',0],['lab.n6nuc','brainstem',()=>V(XM+2.5,-13,-106),'n6',1],['lab.pprf','brainstem',()=>V(XM+3.2,-15.5,-100.5),'',0],['lab.MLF','brainstem',()=>V(XM+1.8,-3,-103.6),'',1],
+ ['lab.midbrain','brainstem',()=>V(XM-12,7,-100),'',0],['lab.pons','brainstem',()=>V(XM-16,-15,-100),'',0],
+ ['eye.R','globe',()=>V(0,-16,6),'',1]
 ];
-const labEls=LABELS.map(([t,,,cls])=>{const d=document.createElement('div');d.className='lab'+(cls?' '+cls:'');d.textContent=t;labelsEl.appendChild(d);return d;});
-const labOI=document.createElement('div');labOI.className='lab';labOI.textContent='OI';labelsEl.appendChild(labOI);
+const labEls=LABELS.map(([t,,,cls])=>{const d=document.createElement('div');d.className='lab'+(cls?' '+cls:'');d.textContent=i18n(t);labelsEl.appendChild(d);return d;});
+const labOI=document.createElement('div');labOI.className='lab';labOI.textContent=i18n('eye.L');labelsEl.appendChild(labOI);
 const lesLabs={R:document.createElement('div'),L:document.createElement('div')};for(const k in lesLabs){lesLabs[k].className='lab les';labelsEl.appendChild(lesLabs[k]);}
 
 /* ---------- UI state ---------- */
 let colorMode='anat', labelMode='key', explodeT=0, explodeV=0, moveMode=false, selected=null, lastKey='', reassemble=null;
 const layerOn={piel:false,hueso:true,globo:true,musculos:true,nervios:true,tronco:true,vasos:true};
-const LAYERS=[['piel','Piel (rostro)','#E0B89A'],['hueso','Hueso','#E9DFC9'],['globo','Globos','#F5F2EA'],['musculos','Músculos','#A8443B'],['nervios','Nervios','#F0CC55'],['tronco','Tronco','#D9BBAF'],['vasos','Vasos y seno','#C23B30']];
+const LAYERS=[['piel','layer.piel','#E0B89A'],['hueso','layer.hueso','#E9DFC9'],['globo','layer.globo','#F5F2EA'],['musculos','layer.musculos','#A8443B'],['nervios','layer.nervios','#F0CC55'],['tronco','layer.tronco','#D9BBAF'],['vasos','layer.vasos','#C23B30']];
 const layersEl=document.getElementById('layers');
-layersEl.innerHTML=LAYERS.map(([k,t,c])=>`<label><input type="checkbox" id="ly-${k}" ${layerOn[k]?'checked':''}><i style="background:${c}"></i>${t}</label>`).join('');
+layersEl.innerHTML=LAYERS.map(([k,t,c])=>`<label><input type="checkbox" id="ly-${k}" ${layerOn[k]?'checked':''}><i style="background:${c}"></i>${i18n(t)}</label>`).join('');
 LAYERS.forEach(([k])=>document.getElementById('ly-'+k).addEventListener('change',e=>{layerOn[k]=e.target.checked;lastKey='';}));
 function segWire(id,fn){const el=document.getElementById(id);if(!el)return;el.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;el.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));fn(b.dataset.v);});}
 segWire('segLabels',v=>{labelMode=v;});
+/* tono de piel: three multiplica la textura por material.color; se divide el tono deseado por el color medio de la textura (SKIN[0], escaneo original) para que el resultado se parezca a la muestra */
+const SKIN=['#c29b8d','#b48a6a','#94694a','#6f4a32','#47301f'], skinBase=new THREE.Color(SKIN[0]), wetBase=H.wet.color.clone();
+function setSkin(i){const c=H.material.color.set(SKIN[i]||SKIN[0]);c.setRGB(Math.min(1,c.r/skinBase.r),Math.min(1,c.g/skinBase.g),Math.min(1,c.b/skinBase.b));H.wet.color.copy(wetBase).multiply(c);lastKey='';EOM.markDirty&&EOM.markDirty();}
+let skin=0;try{skin=+localStorage.getItem('oculo-piel')||0;}catch(e){}
+document.getElementById('segSkin').innerHTML=SKIN.map((c,i)=>`<button data-v="${i}" aria-label="${i+1}" aria-pressed="${i===skin}" style="background:${c}"></button>`).join('');
+setSkin(skin);
+segWire('segSkin',v=>{setSkin(v);try{localStorage.setItem('oculo-piel',v);}catch(e){}});
 document.getElementById('explode').addEventListener('input',e=>{explodeT=e.target.value/100;reassemble=null;});
 document.getElementById('btnReassemble').onclick=()=>{reassemble={t0:performance.now(),from:explodeV,users:allParts().map(p=>[p,p.user.clone()])};document.getElementById('explode').value=0;explodeT=0;};
 const btnMove=document.getElementById('btnMove');btnMove.onclick=()=>{moveMode=!moveMode;btnMove.setAttribute('aria-pressed',moveMode);};
@@ -246,7 +254,7 @@ renderer.domElement.addEventListener('pointermove',e=>{
   if(mode!=='anat')return;
   if(drag){const r=renderer.domElement.getBoundingClientRect();ndc.set(((e.clientX-r.left)/r.width)*2-1,-((e.clientY-r.top)/r.height)*2+1);ray.setFromCamera(ndc,camA);
     const pt=new THREE.Vector3();if(ray.ray.intersectPlane(drag.plane,pt)){const a=drag.S.root.worldToLocal(drag.last.clone()),b=drag.S.root.worldToLocal(pt.clone());drag.p.user.add(b.sub(a));drag.last.copy(pt);lastKey='';}return;}
-  if(e.pointerType==='mouse'){const h=pick(e);if(h){const inf=EOM.INFO[h.object.userData.info];tipEl.hidden=false;tipEl.textContent=(inf?inf.n:'')+(h.object.userData.side==='L'&&!['brainstem','basilar','pca','sca'].includes(h.object.userData.info)?' · OI':' ');const r=hosts.main.getBoundingClientRect();tipEl.style.left=(e.clientX-r.left)+'px';tipEl.style.top=(e.clientY-r.top)+'px';renderer.domElement.style.cursor='pointer';}else{tipEl.hidden=true;renderer.domElement.style.cursor=moveMode?'move':'grab';}}
+  if(e.pointerType==='mouse'){const h=pick(e);if(h){const inf=EOM.INFO[h.object.userData.info];tipEl.hidden=false;tipEl.textContent=(inf?inf.n:'')+(h.object.userData.side==='L'&&!['brainstem','basilar','pca','sca'].includes(h.object.userData.info)?' · '+i18n('eye.L'):' ');const r=hosts.main.getBoundingClientRect();tipEl.style.left=(e.clientX-r.left)+'px';tipEl.style.top=(e.clientY-r.top)+'px';renderer.domElement.style.cursor='pointer';}else{tipEl.hidden=true;renderer.domElement.style.cursor=moveMode?'move':'grab';}}
 });
 renderer.domElement.addEventListener('pointerleave',()=>{tipEl.hidden=true;});
 renderer.domElement.addEventListener('pointerup',e=>{
@@ -259,11 +267,11 @@ function select(s){
   selected=s; lastKey='';
   const T=document.getElementById('infoType'),N=document.getElementById('infoName'),B=document.getElementById('infoBody');
   document.getElementById('btnIsolate').disabled=!s; document.getElementById('btnHide').disabled=!s;
-  if(!s){T.textContent='Pieza seleccionada';N.textContent='Toca cualquier estructura';B.innerHTML='Gira con un dedo o el ratón, acerca con pellizco o rueda. Toca un músculo, nervio, núcleo o vaso para ver su origen, inserción, inervación y perla clínica.';return;}
+  if(!s){T.textContent=i18n('anat.sel_type');N.textContent=i18n('anat.sel_name');B.textContent=i18n('anat.sel_body');return;}
   const inf=EOM.INFO[s.info]||{n:s.info};
-  T.textContent=(inf.t||'')+(['brainstem','n3nuc','n4nuc','n6nuc','pprf','ew','MLF','basilar','pca','sca'].includes(s.info)?'':(s.side==='R'?' · ojo derecho':' · ojo izquierdo'));N.textContent=inf.n;
+  T.textContent=(inf.t||'')+(['brainstem','n3nuc','n4nuc','n6nuc','pprf','ew','MLF','basilar','pca','sca'].includes(s.info)?'':' · '+i18n('side.eye.'+s.side));N.textContent=inf.n;
   const esc=x=>String(x||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
-  const rows=[['Origen',inf.o],['Inserción / destino',inf.i],['Inervación',inf.v],['Acción / trayecto',inf.a]].filter(r=>r[1]&&r[1]!=='—');
+  const rows=[[i18n('anat.row.o'),inf.o],[i18n('anat.row.i'),inf.i],[i18n('anat.row.v'),inf.v],[i18n('anat.row.a'),inf.a]].filter(r=>r[1]&&r[1]!=='—');
   B.innerHTML=`<dl>${rows.map(([k,v])=>`<dt>${k}</dt><dd>${esc(v)}</dd>`).join('')}</dl>${inf.p?`<div class="pearl">${esc(inf.p)}</div>`:''}`;
 }
 
@@ -395,7 +403,7 @@ function drawLabels(){
     const d=SITE[first];const partSide=d[1]==='brainstem'?'R':side;const Pp=SIDES[partSide].parts[d[1]];if(!Pp||!Pp.g.visible){el.style.display='none';continue;}
     let lp=d[0].clone();if(d[1]==='brainstem'&&side==='L')lp.x=2*XM-lp.x;
     const w=SIDES[partSide].root.localToWorld(lp.add(Pp.g.position)).project(camA);
-    el.style.display='';el.textContent='Lesión '+(side==='R'?'OD':'OI');el.style.left=((w.x+1)/2*r.width+6)+'px';el.style.top=((1-w.y)/2*r.height+16)+'px';}
+    el.style.display='';el.textContent=i18n('anat.les_lab',{eye:i18n('eye.'+side)});el.style.left=((w.x+1)/2*r.width+6)+'px';el.style.top=((1-w.y)/2*r.height+16)+'px';}
 }
 function loop(now){
   requestAnimationFrame(loop);
@@ -408,6 +416,11 @@ function loop(now){
   renderer.render(scene,cam);
   if(mode==='face')EOM.eyeScreen=eyeScreen(); else drawLabels();
 }
+EOM.onLang=()=>{
+  labEls.forEach((d,i)=>{d.textContent=i18n(LABELS[i][0]);}); labOI.textContent=i18n('eye.L');
+  LAYERS.forEach(([k,t])=>{document.getElementById('ly-'+k).parentNode.lastChild.textContent=i18n(t);});
+  tipEl.hidden=true; select(selected);
+};
 EOM.onTab=t=>{if(t==='anat'){mount('main');}else if(t==='sim'){mount('face');}else if(t==='dx'){mount('face2');}EOM.markDirty&&EOM.markDirty();};
 EOM.has3D=true; document.documentElement.classList.add('has3d');
 EOM.onTab(EOM.S.tab);

@@ -107,5 +107,5 @@ function buildHead(THREE,D,maps){
     if(changed){geo.attributes.position.needsUpdate=true;normals();buildLashes();}
   }
   setLids({R:0,L:0}); buildLashes();
-  return {mesh,lashes,setLids,material:mat,eyes:D.eyes};
+  return {mesh,lashes,setLids,material:mat,wet:wetMat,eyes:D.eyes};
 }

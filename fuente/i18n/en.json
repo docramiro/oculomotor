@@ -1,0 +1,1513 @@
+{
+  "_name": "English",
+  "eye": {
+    "R": "RE",
+    "L": "LE"
+  },
+  "mus": {
+    "short": {
+      "LR": "LR",
+      "MR": "MR",
+      "SR": "SR",
+      "IR": "IR",
+      "SO": "SO",
+      "IO": "IO"
+    },
+    "name": {
+      "SR": "Superior rectus",
+      "IR": "Inferior rectus",
+      "SO": "Superior oblique",
+      "IO": "Inferior oblique"
+    },
+    "lps": "Levator",
+    "para": "Pupil (III)",
+    "symp": "Sympathetic"
+  },
+  "dev": {
+    "et": "ET",
+    "xt": "XT",
+    "rht": "RHT",
+    "lht": "LHT",
+    "ortho": "ortho",
+    "ext": "ext",
+    "int": "int"
+  },
+  "side": {
+    "eye": {
+      "R": "right eye",
+      "L": "left eye"
+    },
+    "side": {
+      "R": "right side",
+      "L": "left side"
+    }
+  },
+  "common": {
+    "reset": "Reset"
+  },
+  "hdr": {
+    "sub": "Examination sheet · cranial nerves III, IV and VI",
+    "nav_aria": "Sections",
+    "lang_aria": "Language",
+    "tab": {
+      "sim": "Simulator",
+      "anat": "3D anatomy",
+      "dx": "Diagnosis"
+    }
+  },
+  "sim": {
+    "lesion": "Lesion",
+    "lesion_sub": "per eye or by syndrome",
+    "lock": "A clinical case is in progress: the lesion is hidden. Examine the patient here or in the Diagnosis tab.",
+    "syn": "Syndrome",
+    "both_eyes": "both eyes",
+    "syn_side": {
+      "R": "Right side",
+      "L": "Left side"
+    },
+    "severity": "Severity",
+    "exam": "Examination",
+    "gaze": "Gaze",
+    "h": "H-pattern pursuit",
+    "stop": "Stop",
+    "primary": "Primary position",
+    "conv": "Convergence",
+    "fixing": "Fixating eye",
+    "fix": {
+      "R": "RE fixates",
+      "L": "LE fixates"
+    },
+    "cover": "Occluder (cover test)",
+    "cover_none": "Uncovered",
+    "cover_eye": {
+      "R": "Cover RE",
+      "L": "Cover LE"
+    },
+    "head": "Head",
+    "tilt": "Tilt",
+    "yaw": "Face turn",
+    "comp": "Compensatory posture",
+    "head_reset": "Head straight",
+    "lift": "Lift the eyelids to see the eye (the examiner holds the lid up)",
+    "inspect": "Inspection <span>· examiner's view</span>",
+    "hint": "Drag over the face to move the penlight · the corneal reflex lets you read the Hirschberg test",
+    "go_anat": "See muscles and nerves in 3D →",
+    "face_aria": "Patient's face with both eyes",
+    "ro_h": "Horizontal",
+    "ro_v": "Vertical",
+    "ro_t": "Torsion",
+    "ro_p": "Pupils RE / LE",
+    "nine": "Nine diagnostic positions",
+    "nine_sub": "tap one to look there · deviation in prism dioptres (Δ)",
+    "nine_aria": "Nine positions of gaze",
+    "interp": "Interpretation",
+    "patient": "What the patient sees",
+    "patient_sub": "red glass over RE",
+    "patient_aria": "Diplopia as perceived by the patient"
+  },
+  "ctl": {
+    "eye": {
+      "R": "Right eye",
+      "L": "Left eye"
+    },
+    "les_aria": {
+      "R": "Right eye lesion",
+      "L": "Left eye lesion"
+    },
+    "force": "Strength of each muscle",
+    "head_out": {
+      "R": "R",
+      "L": "L"
+    }
+  },
+  "stat": {
+    "hidden": "Lesion hidden",
+    "none": "No lesion",
+    "with_side": {
+      "R": "{les}, right",
+      "L": "{les}, left"
+    },
+    "case": "Case",
+    "lesion": "Lesion",
+    "fix": "Fixating",
+    "covered": "{eye} covered"
+  },
+  "gaze": {
+    "front": "straight ahead",
+    "up": "up {n}°",
+    "down": "down {n}°",
+    "right": "right {n}°",
+    "left": "left {n}°",
+    "look": "Look {g}"
+  },
+  "cv": {
+    "occluder": "occluder",
+    "pat_right": "← patient's right",
+    "pat_left": "patient's left →",
+    "penlight": "Penlight: {g}",
+    "looks": "Gaze: {g}",
+    "head": "Head {parts}",
+    "tilt": {
+      "R": "tilted right {n}°",
+      "L": "tilted left {n}°"
+    },
+    "yaw": {
+      "R": "face turned right {n}°",
+      "L": "face turned left {n}°"
+    },
+    "conv": "Convergence (near target)"
+  },
+  "dip": {
+    "covered": "With the {eye} covered the patient sees a single image: binocular diplopia disappears when one eye is occluded.",
+    "uncrossed": "<b>Uncrossed</b> (homonymous) horizontal diplopia: each image lies on the same side as its eye. Separation {n}Δ.",
+    "crossed": "<b>Crossed</b> (heteronymous) horizontal diplopia: each image lies on the side opposite its eye. Separation {n}Δ.",
+    "vertical": "Vertical diplopia: the lower image belongs to the higher eye ({eye}).",
+    "ext": "{eye} excyclotorted by {n}°: its image looks tilted.",
+    "int": "{eye} incyclotorted by {n}°: its image looks tilted.",
+    "single": "Single vision: both images fall on the fovea."
+  },
+  "ro": {
+    "none": "no deviation",
+    "eso": "{deg}° · esotropia",
+    "exo": "{deg}° · exotropia",
+    "rht": "{deg}° · right hypertropia",
+    "lht": "{deg}° · left hypertropia",
+    "tors": "RE / LE relative to expected",
+    "aniso": "anisocoria of {n} mm",
+    "iso": "equal pupils (mm, room light)"
+  },
+  "exam": {
+    "ortho": "orthotropia",
+    "pupils": "pupils {r}/{l} mm"
+  },
+  "clinui": {
+    "running": "Case in progress: the interpretation is shown when the case ends.",
+    "healthy": "Both eyes are healthy. Choose a lesion or a syndrome in the left-hand panel.",
+    "paresis": "paresis {n} %"
+  },
+  "find": {
+    "primary": "Primary",
+    "ortho": "Orthotropia in primary position ({eye} fixating).",
+    "eso": "esotropia of {n}Δ",
+    "exo": "exotropia of {n}Δ",
+    "rht": "right hypertropia of {n}Δ",
+    "lht": "left hypertropia of {n}Δ",
+    "both": "{a} and {b}",
+    "fixing": "{dev} with the {eye} fixating.",
+    "hering": "If the paretic eye fixates, the deviation rises to about {n}Δ (secondary deviation greater than primary).",
+    "lid_k": "Eyelid",
+    "lid": {
+      "complete": "{eye}: complete ptosis.",
+      "partial": "{eye}: partial ptosis.",
+      "mild": "{eye}: mild ptosis."
+    },
+    "pupil_k": "Pupil",
+    "pupil_mid": {
+      "R": "Right pupil mid-sized and unreactive: parasympathetic and sympathetic lesion.",
+      "L": "Left pupil mid-sized and unreactive: parasympathetic and sympathetic lesion."
+    },
+    "mydr": "Mydriasis in the {eye}: the anisocoria increases in bright light.",
+    "mios": "Miosis in the {eye}: the anisocoria increases in the dark."
+  },
+  "cam": {
+    "title": "Camera",
+    "sub": "examine with your finger",
+    "idle": "Turn the camera on and move your index finger in front of it: the eyes follow it as in a real examination. Bring your finger closer to the camera to see convergence.",
+    "follow": "Follow my finger",
+    "off": "Turn camera off",
+    "activate": "Turn camera on",
+    "active": "Camera on",
+    "mode_aria": "What to detect",
+    "mode_hand": "Detect the hand",
+    "mode_color": "Red fingertip",
+    "range": "Range",
+    "conv": "Convergence when the finger comes closer",
+    "blocked": "The camera could not be opened. If you opened the app inside Claude or inside Moodle, open it directly in its own tab (your https address). Meanwhile you can drag the penlight.",
+    "loading": "Loading the hand detector…",
+    "ready": "Ready: move your index finger in front of the camera. Bring it closer to see convergence.",
+    "hand_fail": "The hand detector could not be loaded (it needs internet). Switched to “Red fingertip” mode: put something red on the tip of your finger.",
+    "https_only": "The camera only works on https pages. Open the address that starts with https://.",
+    "asking": "Asking for camera permission… if the browser shows a prompt at the top, press “Allow”.",
+    "red_mode": "Red fingertip mode: move the red tip in front of the camera.",
+    "err": {
+      "NotAllowedError": "Camera permission is blocked. In Chrome, tap the padlock (or the settings icon) next to the address → Camera → Allow, then reload the page. On a Mac also check System Settings → Privacy & Security → Camera → enable Chrome.",
+      "NotFoundError": "No camera was found on this device.",
+      "NotReadableError": "The camera is in use by another application (Zoom, Teams, FaceTime…). Close it and try again.",
+      "OverconstrainedError": "The camera did not accept the requested settings."
+    },
+    "help_title": "How to turn the camera on",
+    "help": {
+      "http": [
+        "Close this page.",
+        "Open the address again, typing <b>https://</b> at the start."
+      ],
+      "ios": [
+        "Open the iPhone <b>Settings</b> → <b>Safari</b> (or <b>Chrome</b>) → <b>Camera</b> → <b>Ask</b> or <b>Allow</b>.",
+        "In Safari tap <b>aA</b> next to the address → <b>Website Settings</b> → <b>Camera: Allow</b>.",
+        "Reload the page and tap <b>Turn camera on</b>."
+      ],
+      "android": [
+        "Tap the icon next to the address (padlock or settings) → <b>Permissions</b> → <b>Camera: Allow</b>.",
+        "If it is not listed, go to <b>Phone settings → Apps → Chrome → Permissions → Camera → Allow</b>.",
+        "Reload the page and tap <b>Turn camera on</b>."
+      ],
+      "mac": [
+        "Click the icon to the left of the address → <b>Camera: Allow</b>.",
+        "Check <b>System Settings → Privacy & Security → Camera</b> and enable your browser; quit it with Cmd + Q and open it again.",
+        "Reload the page and click <b>Turn camera on</b>."
+      ],
+      "other": [
+        "Click the icon to the left of the address → <b>Camera: Allow</b>.",
+        "Check in the system settings that the browser has access to the camera.",
+        "Reload the page and click <b>Turn camera on</b>."
+      ]
+    },
+    "diag": {
+      "https_ok": "https ✓",
+      "https_no": "no https ✗",
+      "api_ok": "camera available ✓",
+      "api_no": "camera not available here ✗",
+      "perm": "permission: {s}",
+      "granted": "allowed ✓",
+      "denied": "blocked ✗",
+      "prompt": "will be asked on activation"
+    }
+  },
+  "anat": {
+    "loading": "Loading 3D model…",
+    "fail": "The 3D view could not be loaded (it needs a connection). The rest of the app works without it.",
+    "view": {
+      "front": "Front",
+      "top": "Top",
+      "side": "Side",
+      "back": "Brainstem"
+    },
+    "move": "Move parts",
+    "move_title": "Drag parts to pull them apart",
+    "color": "Colour by nerve",
+    "explode": "Explode",
+    "explode_aria": "Explode the model",
+    "reassemble": "Reassemble",
+    "sel_type": "Selected part",
+    "sel_name": "Tap any structure",
+    "sel_body": "Rotate with one finger or the mouse, zoom with a pinch or the wheel. Tap a muscle, nerve, nucleus or vessel to see its origin, insertion, innervation and clinical pearl.",
+    "isolate": "Isolate",
+    "hide": "Hide",
+    "show_all": "Show all",
+    "layers": "Layers",
+    "labels": "Labels",
+    "skin": "Skin tone",
+    "lab_none": "None",
+    "lab_key": "Key",
+    "lab_all": "All",
+    "motion": "Movement",
+    "motion_sub": "linked to the simulator",
+    "drag_aria": "Drag to move the penlight",
+    "drag": "drag the penlight",
+    "change": "Change lesion",
+    "row": {
+      "o": "Origin",
+      "i": "Insertion / target",
+      "v": "Innervation",
+      "a": "Action / course"
+    },
+    "les_lab": "Lesion {eye}",
+    "cur_hidden": "Case in progress: the lesion is not marked on the anatomy until it ends.",
+    "cur": "Current lesion: {les}. Affected structures are marked in red and paralysed muscles are shown in grey."
+  },
+  "lab": {
+    "SR": "Superior rectus",
+    "IR": "Inferior rectus",
+    "MR": "Medial rectus",
+    "LR": "Lateral rectus",
+    "SO": "Superior oblique",
+    "IO": "Inferior oblique",
+    "LPS": "Levator palpebrae",
+    "trochlea": "Trochlea",
+    "annulus": "Annulus of Zinn",
+    "optic": "Optic nerve",
+    "sof": "Superior orbital fissure",
+    "III": "CN III",
+    "IIIsup": "Superior division",
+    "IIIinf": "Inferior division",
+    "cil": "Ciliary ganglion",
+    "IV": "CN IV",
+    "VI": "CN VI",
+    "dorello": "Dorello's canal",
+    "cs": "Cavernous sinus",
+    "ica": "Internal carotid",
+    "pcom": "Posterior communicating a.",
+    "pca": "Posterior cerebral a.",
+    "sca": "Superior cerebellar a.",
+    "basilar": "Basilar a.",
+    "n3nuc": "CN III nucleus",
+    "ew": "Edinger-Westphal",
+    "n4nuc": "CN IV nucleus",
+    "n6nuc": "CN VI nucleus",
+    "pprf": "PPRF",
+    "MLF": "MLF",
+    "midbrain": "Midbrain",
+    "pons": "Pons"
+  },
+  "layer": {
+    "piel": "Skin (face)",
+    "hueso": "Bone",
+    "globo": "Globes",
+    "musculos": "Muscles",
+    "nervios": "Nerves",
+    "tronco": "Brainstem",
+    "vasos": "Vessels and sinus"
+  },
+  "dx": {
+    "tab": {
+      "case": "Clinical case",
+      "parks": "Parks three-step",
+      "tree": "Diplopia algorithm",
+      "edit": "My questions"
+    },
+    "explore": "Examine the patient",
+    "hint": "drag the penlight",
+    "face_aria": "Face of the case patient",
+    "tilt": "Tilt head",
+    "tilt_l": "Left",
+    "tilt_0": "Straight",
+    "tilt_r": "Right",
+    "cover": "Occluder",
+    "no": "None",
+    "fix": "Fixating",
+    "patient_aria": "Perceived diplopia"
+  },
+  "case": {
+    "title": "Clinical cases",
+    "intro": "The lesion stays hidden. Read the vignette, examine the patient in the right-hand panel (gaze, tilt, occluder, fixation) and answer step by step until you reach the topographic diagnosis.",
+    "random": "Random case",
+    "nq": "{n} questions",
+    "mine": "created by you",
+    "start": "Start",
+    "result": "Result",
+    "dx": "Diagnosis: {dx}",
+    "loaded": "Lesion loaded in the simulator: {les}",
+    "to_sim": "See in the simulator",
+    "to_anat": "See in 3D anatomy",
+    "again": "Another case",
+    "explore": "Examine: {what}",
+    "ex_look": "look {g}",
+    "ex_tilt": {
+      "R": "tilt the head to the right",
+      "L": "tilt the head to the left"
+    },
+    "ex_conv": "ask for convergence",
+    "head": "Case · {t}",
+    "quit": "Quit",
+    "qn": "Question {i} of {n}",
+    "right": "Correct.",
+    "wrong": "Incorrect.",
+    "next": "Next",
+    "see_dx": "See diagnosis",
+    "noq": "This case has no questions.",
+    "untitled": "Untitled case"
+  },
+  "parks": {
+    "title": "Parks-Bielschowsky three-step test",
+    "intro": "For a hypertropia caused by palsy of a single cyclovertical muscle. Each step rules out half of the candidates. Measure in the right-hand panel: the readout shows RHT or LHT in prism dioptres.",
+    "s1": {
+      "t": "Which eye is higher in primary position?",
+      "h": "Cover and uncover, or look at the corneal reflex: in the higher eye the reflex sits below the centre of the pupil.",
+      "R": "Right hypertropia",
+      "L": "Left hypertropia"
+    },
+    "s2": {
+      "t": "In which gaze direction does the hypertropia increase?",
+      "h": "Look right and left (arrows in the panel) and compare the readout.",
+      "R": "Right gaze",
+      "L": "Left gaze"
+    },
+    "s3": {
+      "t": "With which head tilt does it increase?",
+      "h": "Tilt the head towards each shoulder: ocular counter-rolling requires intorsion of the eye on the side of the tilt.",
+      "R": "Tilt to the right",
+      "L": "Tilt to the left"
+    },
+    "res_title": {
+      "R": "right {mus}",
+      "L": "left {mus}"
+    },
+    "res": {
+      "R": "Paretic muscle: {mus} of the right eye, supplied by {nerve}.",
+      "L": "Paretic muscle: {mus} of the left eye, supplied by {nerve}."
+    },
+    "nerve4": "CN IV (trochlear)",
+    "nerve3": "CN III",
+    "so_note": "This is the most common result: CN IV palsy is the leading cause of isolated vertical diplopia.",
+    "iii_note": "Isolated paresis of a single CN III muscle is rare: look for involvement of other CN III muscles, myasthenia or a restrictive cause.",
+    "load": "Load in the simulator"
+  },
+  "treeui": {
+    "title": "Diplopia algorithm",
+    "intro": "Answer with what you find in the history and the examination. Each leaf of the tree explains the diagnosis and can load an example in the simulator.",
+    "load": "Load an example in the simulator",
+    "go": "Go to the three steps",
+    "back": "← Back"
+  },
+  "ed": {
+    "store_ro": "Shared bank (read-only for you)",
+    "store_db": "Saved in the artifact's bank: you see it on any device",
+    "store_local": "Saved in this browser only",
+    "title": "My questions and cases",
+    "intro": "Create a new case with its vignette, the hidden lesion and your questions, or add questions to one of the built-in cases. They appear under “Clinical case”.",
+    "new": "New case",
+    "add": "Add questions to a built-in case",
+    "added_to": "added to “{t}”",
+    "local_only": "in this browser only",
+    "try": "Try",
+    "edit": "Edit",
+    "del": "Delete",
+    "del_confirm": "Delete?",
+    "empty": "You have no cases of your own yet.",
+    "io": "Export or import (JSON)",
+    "io_ph": "Paste an exported JSON here to import it",
+    "export": "Export my cases",
+    "copy": "Copy",
+    "import": "Import",
+    "extra_title": "Extra questions",
+    "m_export": "Done: copy the text.",
+    "m_select": "Text selected: copy it from the menu.",
+    "m_copied": "Copied.",
+    "m_badjson": "The text is not valid JSON.",
+    "m_nocases": "No cases found in the JSON.",
+    "m_imported": "Imported: {n}.",
+    "e_noperm": "You do not have permission to save to the shared bank; it was saved in this browser only.",
+    "e_nosave": "Could not save to the shared bank; it was saved in this browser.",
+    "e_nodel": "Could not delete from the shared bank."
+  },
+  "form": {
+    "edit": "Edit",
+    "new": "New",
+    "type": "Type",
+    "standalone": "New standalone case",
+    "extend": "Add questions to “{t}”",
+    "title": "Title",
+    "vignette": "Clinical vignette",
+    "dx": "Diagnosis (shown at the end)",
+    "les": "Hidden lesion · {eye}",
+    "or_syn": "or syndrome",
+    "syn_side": "Side of the syndrome",
+    "right": "Right",
+    "left": "Left",
+    "take": "Use the simulator's current lesion",
+    "add_q": "+ Question",
+    "save": "Save",
+    "cancel": "Cancel",
+    "qn": "Question {n}",
+    "remove": "Remove",
+    "q_ph": "Question text",
+    "mark_aria": "Mark option {l} as correct",
+    "opt_ph": "Option {l}",
+    "rm_opt_aria": "Remove option",
+    "add_opt": "+ Option",
+    "mark_note": "Use the circle to mark the correct answer.",
+    "fb_ph": "Feedback (why it is correct)",
+    "e_vignette": "Write the case vignette.",
+    "e_noq": "Add at least one question with two options."
+  },
+  "foot": {
+    "p1": "<b>How the model works.</b> Each eye is a sphere with six muscles. The line of pull of the vertical recti makes a 23° angle with the visual axis and that of the obliques 51°, so their vertical action depends on the horizontal position of the eye. Eye position results from the balance between the tension of all the muscles and orbital elasticity. The brain computes the innervation needed by the fixating eye and sends the same amount to the yoke muscles of the other eye (Hering's law); that is why, when the paretic eye fixates, the secondary deviation is larger than the primary. The 3D anatomy is modelled from published anatomical measurements (spiral of Tillaux, positions of the apex, trochlea and pulleys); it is schematic, not an image segmentation.",
+    "p2": "Face: “Infinite” 3D scan by Lee Perry-Smith, Infinite Realities (Creative Commons Attribution 3.0 licence), distributed with the three.js examples; the eyelids were opened and eyeballs, eyelashes and movable eyelids were added.",
+    "p3": "Teaching model with approximate parameters: it does not reproduce the magnitudes of a real patient. References: Leigh RJ, Zee DS. <em>The Neurology of Eye Movements</em>, 5th ed.; Brazis PW, Masdeu JC, Biller J. <em>Localization in Clinical Neurology</em>; von Noorden GK, Campos EC. <em>Binocular Vision and Ocular Motility</em>; Demer JL. The orbital pulley system: a revolution in concepts of orbital anatomy. <em>Ann N Y Acad Sci</em> 2002;956:17-32."
+  },
+  "les": {
+    "normal": {
+      "label": "No lesion"
+    },
+    "III": {
+      "label": "Complete CN III (pupil involved)",
+      "short": "Complete CN III"
+    },
+    "IIIps": {
+      "label": "Pupil-sparing CN III",
+      "short": "Pupil-sparing CN III"
+    },
+    "IIIsup": {
+      "label": "CN III · superior division",
+      "short": "CN III sup. division"
+    },
+    "IIIinf": {
+      "label": "CN III · inferior division",
+      "short": "CN III inf. division"
+    },
+    "IV": {
+      "label": "CN IV (trochlear)",
+      "short": "CN IV"
+    },
+    "VI": {
+      "label": "CN VI (abducens)",
+      "short": "CN VI"
+    },
+    "INO": {
+      "label": "Internuclear ophthalmoplegia (MLF)",
+      "short": "INO"
+    },
+    "HOR": {
+      "label": "Horner syndrome (for contrast)",
+      "short": "Horner"
+    },
+    "manual": {
+      "label": "Manual setting",
+      "short": "Manual setting"
+    }
+  },
+  "syn": {
+    "none": "None",
+    "CS": "Cavernous sinus",
+    "APEX": "Orbital apex",
+    "VI2": "Bilateral CN VI (intracranial hypertension)",
+    "IV2": "Bilateral CN IV (traumatic)",
+    "N3": "CN III nuclear",
+    "OAH": "One-and-a-half",
+    "WEB": "Weber (ventral midbrain)"
+  },
+  "clin": {
+    "III": {
+      "t": "Complete CN III palsy",
+      "p": [
+        "Eye down and out: the lateral rectus (VI) and the superior oblique (IV) act unopposed. Complete ptosis from loss of the levator. Fixed dilated pupil and loss of accommodation from damage to the parasympathetic fibres.",
+        "With the pupil involved, think first of compression: posterior communicating artery aneurysm or uncal herniation. It requires urgent CT angiography or MR angiography."
+      ]
+    },
+    "IIIps": {
+      "t": "Pupil-sparing CN III palsy",
+      "p": [
+        "Same ophthalmoplegia and ptosis, with a normal pupil. The pupillomotor fibres travel in the periphery of the nerve, supplied by pial vessels; microvascular ischaemia damages the core.",
+        "Typical of diabetes and hypertension; it usually recovers in 8 to 12 weeks. Watch the pupil during the first days."
+      ]
+    },
+    "IIIsup": {
+      "t": "CN III · superior division",
+      "p": [
+        "Ptosis and limited elevation (superior rectus). CN III divides in the anterior cavernous sinus or at the superior orbital fissure, so a divisional lesion points to that region."
+      ]
+    },
+    "IIIinf": {
+      "t": "CN III · inferior division",
+      "p": [
+        "Exotropia with limited adduction and depression, and mydriasis. The eyelid is spared because the levator depends on the superior division."
+      ]
+    },
+    "IV": {
+      "t": "CN IV (trochlear)",
+      "p": [
+        "Hypertropia of the affected eye that increases in contralateral gaze, in downgaze and on tilting the head towards the affected side (Bielschowsky). Excyclotorsion of the affected eye.",
+        "Compensatory posture: head tilted towards the healthy side, chin down. Trauma is the most common acquired cause. Because of its complete decussation, a nuclear lesion affects the contralateral eye."
+      ]
+    },
+    "VI": {
+      "t": "CN VI (abducens)",
+      "p": [
+        "Esotropia with limited abduction. Uncrossed horizontal diplopia that is worse at distance and towards the affected side. Compensatory posture: face turned towards the affected side.",
+        "Causes: microvascular ischaemia, raised intracranial pressure (false localizing sign at Dorello's canal), tumours of the clivus or the cerebellopontine angle, Wernicke encephalopathy."
+      ]
+    },
+    "INO": {
+      "t": "Internuclear ophthalmoplegia (MLF)",
+      "p": [
+        "Lesion of the medial longitudinal fasciculus on the side of the eye that does not adduct. In lateral gaze that eye falls short in adduction and the contralateral eye shows abducting nystagmus. Convergence is preserved: try it with the Convergence button.",
+        "Bilateral in a young person: multiple sclerosis. Unilateral in an older adult: brainstem infarct."
+      ]
+    },
+    "HOR": {
+      "t": "Horner syndrome (for contrast)",
+      "p": [
+        "This is not a cranial nerve: it is the sympathetic pathway. Mild ptosis of 1 to 2 mm (Müller's muscle), miosis and variable anhidrosis; the anisocoria increases in the dark. Normal motility."
+      ]
+    },
+    "manual": {
+      "t": "Manual setting",
+      "p": [
+        "Each control is the strength of the muscle (100 % = normal). Try partial pareses or combinations."
+      ]
+    },
+    "CS": {
+      "t": "Cavernous sinus syndrome",
+      "p": [
+        "It involves III, IV, VI, V1 (and V2) and the pericarotid sympathetic plexus: painful ophthalmoplegia with a mid-sized unreactive pupil and facial hypoaesthesia. CN VI travels inside the sinus, next to the carotid; the others run in the lateral wall.",
+        "Causes: carotid-cavernous fistula, septic thrombosis, cavernous aneurysm, tumours (meningioma, pituitary adenoma, metastases) and Tolosa-Hunt syndrome."
+      ]
+    },
+    "APEX": {
+      "t": "Orbital apex syndrome",
+      "p": [
+        "Ophthalmoplegia of III, IV and VI with V1 and, in addition, optic neuropathy: visual loss and a relative afferent pupillary defect. Without involvement of CN II it is called superior orbital fissure syndrome.",
+        "Causes: orbital inflammation, mucormycosis and aspergillosis in diabetics, tumours and trauma."
+      ]
+    },
+    "VI2": {
+      "t": "Bilateral CN VI paresis",
+      "p": [
+        "Esotropia that increases in gaze to either side. In raised intracranial pressure CN VI is stretched at Dorello's canal: it is a false localizing sign. Check the fundus."
+      ]
+    },
+    "IV2": {
+      "t": "Bilateral CN IV palsy",
+      "p": [
+        "Alternating hypertropia: right in left gaze and left in right gaze, with a positive Bielschowsky test to both sides. There is usually a V-pattern esotropia and large excyclotorsion (more than 10°). Typical of severe head trauma."
+      ]
+    },
+    "N3": {
+      "t": "CN III nuclear lesion",
+      "p": [
+        "The superior rectus subnucleus supplies the contralateral SR, and the single central caudal nucleus supplies both levators: a nuclear lesion causes bilateral ptosis and weakness of both SRs, in addition to the ipsilateral CN III palsy.",
+        "Causes: paramedian midbrain infarcts (artery of Percheron), tumours, demyelination."
+      ]
+    },
+    "OAH": {
+      "t": "One-and-a-half syndrome",
+      "p": [
+        "Lesion of the CN VI nucleus or the PPRF plus the MLF on the same side. Neither eye moves towards the side of the lesion; towards the other side only the contralateral eye abducts, with nystagmus. Convergence is preserved.",
+        "Causes: multiple sclerosis, pontine infarct or tumour."
+      ]
+    },
+    "WEB": {
+      "t": "Weber syndrome",
+      "p": [
+        "Lesion of the ventral midbrain: CN III fascicle and cerebral peduncle. Ipsilateral CN III palsy with contralateral hemiparesis. If it involves the red nucleus with contralateral tremor, it is Benedikt syndrome."
+      ]
+    }
+  },
+  "cases": {
+    "vi-dm": {
+      "titulo": "Double vision while driving",
+      "vineta": "A 62-year-old man with long-standing type 2 diabetes and hypertension. For the past 4 days he has seen double while driving: the images are separated horizontally and the separation is worse when looking into the distance and to the right. Normal pupils, no ptosis.",
+      "dx": "Right CN VI palsy, probably microvascular.",
+      "preguntas": [
+        {
+          "q": "Examine primary position and lateral gaze. What deviation do you find?",
+          "opts": [
+            "Esotropia that increases in right gaze",
+            "Exotropia that increases in left gaze",
+            "Right hypertropia that increases in downgaze",
+            "Orthotropia in all positions"
+          ],
+          "fb": "The RE does not cross the midline on right gaze. It is an incomitant esotropia: greater in the field of action of the paretic muscle."
+        },
+        {
+          "q": "What type of diplopia does the patient describe?",
+          "opts": [
+            "Uncrossed (homonymous) horizontal",
+            "Crossed (heteronymous) horizontal",
+            "Vertical",
+            "Monocular"
+          ],
+          "fb": "In esotropia the image of the deviated eye falls on the nasal retina and is projected temporally, so each image lies on the side of its own eye. Check it in “What the patient sees”."
+        },
+        {
+          "q": "What compensatory posture do you expect?",
+          "opts": [
+            "Face turned to the right",
+            "Face turned to the left",
+            "Head tilted to the left",
+            "Chin up"
+          ],
+          "fb": "Turning the face towards the side of the paretic LR moves the eyes to the left, away from the muscle's field of action, where the patient can fuse."
+        },
+        {
+          "q": "What is the most appropriate management?",
+          "opts": [
+            "Control of vascular risk factors and observation; neuroimaging if there are atypical features or no improvement within about 12 weeks",
+            "Immediate lumbar puncture",
+            "Edrophonium test as the first investigation",
+            "Strabismus surgery within the first week"
+          ],
+          "fb": "In patients over 50 with vascular risk factors and an isolated palsy, the most common cause is ischaemic and it usually resolves in 8 to 12 weeks. Many centres obtain an MRI from the outset; it is mandatory if there is atypical pain, other deficits, papilloedema or no improvement."
+        }
+      ]
+    },
+    "iv-tce": {
+      "titulo": "Vertical diplopia after an accident",
+      "vineta": "A 24-year-old man, a motorcyclist, who sustained a head injury 3 weeks ago. He sees double vertically and the images look tilted, especially when going down stairs and when reading. In recent photos he appears with his head tilted to the left.",
+      "dx": "Right CN IV palsy (right superior oblique).",
+      "preguntas": [
+        {
+          "q": "Step 1. In primary position, which eye is higher?",
+          "opts": [
+            "The right",
+            "The left",
+            "Neither",
+            "They alternate"
+          ],
+          "fb": "Right hypertropia. The paretic muscle is a depressor of the RE (IR or SO) or an elevator of the LE (SR or IO)."
+        },
+        {
+          "q": "Step 2. In which horizontal gaze does the right hypertropia increase?",
+          "opts": [
+            "Left gaze",
+            "Right gaze",
+            "The same in both"
+          ],
+          "fb": "It increases to the left. Two candidates remain: the right SO (the RE is adducted) and the left SR (the LE is abducted)."
+        },
+        {
+          "q": "Step 3. With which head tilt does it increase?",
+          "opts": [
+            "Tilt to the right",
+            "Tilt to the left",
+            "No change"
+          ],
+          "fb": "On tilting to the right, the RE must intort using the SR and the SO. Without the SO, the SR elevates unopposed and the hypertropia increases. The paretic muscle is the right SO: right CN IV."
+        },
+        {
+          "q": "What torsion does the right eye show?",
+          "opts": [
+            "Extorsion",
+            "Intorsion",
+            "None"
+          ],
+          "fb": "The SO is the main intorter. Without it, the IO extorts unopposed. It is measured with the double Maddox rod or on fundus examination (the fovea lies low relative to the disc)."
+        },
+        {
+          "q": "Why is CN IV so vulnerable to trauma?",
+          "opts": [
+            "It is the longest and thinnest nerve in its intracranial course and exits from the dorsal surface of the brainstem, next to the free edge of the tentorium",
+            "It passes through Dorello's canal",
+            "It travels inside the cavernous sinus next to the carotid",
+            "Its pupillary fibres are peripheral"
+          ],
+          "fb": "It is the only nerve that exits dorsally and decussates completely; its long course around the midbrain exposes it to impact against the tentorium. Because of the decussation, a nuclear lesion affects the contralateral SO."
+        }
+      ]
+    },
+    "iii-aneur": {
+      "titulo": "Sudden headache and drooping eyelid",
+      "vineta": "A 45-year-old woman with a sudden, severe headache for the past 6 hours. She cannot open her right eye. When the eyelid is lifted, the eye is deviated down and out, and the right pupil measures 6.5 mm and does not react to light.",
+      "dx": "Complete right CN III palsy with pupil involvement: rule out a posterior communicating artery aneurysm.",
+      "preguntas": [
+        {
+          "q": "Which muscles retain their function in the right eye?",
+          "opts": [
+            "Lateral rectus and superior oblique",
+            "Medial rectus and inferior rectus",
+            "Superior rectus and inferior oblique",
+            "None"
+          ],
+          "fb": "The LR (VI) and the SO (IV) do not depend on CN III. Unopposed, they pull the eye outwards and slightly downwards, with intorsion on attempted downgaze."
+        },
+        {
+          "q": "Which finding points to a compressive cause?",
+          "opts": [
+            "The fixed dilated pupil",
+            "The complete ptosis",
+            "The exotropia",
+            "The pain"
+          ],
+          "fb": "The pupillomotor fibres travel in the dorsomedial periphery of the nerve. External compression affects them early; microvascular ischaemia damages the core and usually spares them."
+        },
+        {
+          "q": "Which cause must you rule out immediately?",
+          "opts": [
+            "Posterior communicating artery aneurysm",
+            "Diabetic mononeuropathy",
+            "Ocular myasthenia",
+            "Thyroid eye disease"
+          ],
+          "fb": "CN III passes between the posterior cerebral and the superior cerebellar arteries and runs alongside the posterior communicating artery. An expanding PCom aneurysm can rupture within hours or days. See it in 3D anatomy."
+        },
+        {
+          "q": "Which investigation do you request?",
+          "opts": [
+            "Urgent CT angiography or MR angiography of the head",
+            "Glycated haemoglobin and an appointment in 3 months",
+            "Ice test",
+            "Visual field testing"
+          ],
+          "fb": "CT angiography is fast and sensitive for aneurysms larger than 3 to 4 mm. If it is negative and suspicion persists, digital subtraction angiography is performed."
+        }
+      ]
+    },
+    "iii-isq": {
+      "titulo": "Ptosis with a normal pupil",
+      "vineta": "A 67-year-old man with poorly controlled diabetes and hypertension. He woke up with a drooping left eyelid and mild periorbital pain. The left eye is down and out; both pupils measure 3.5 mm and react equally.",
+      "dx": "Pupil-sparing left CN III palsy, probably microvascular.",
+      "preguntas": [
+        {
+          "q": "What is this pattern called?",
+          "opts": [
+            "Pupil-sparing CN III palsy",
+            "Horner syndrome",
+            "Internuclear ophthalmoplegia",
+            "CN IV palsy"
+          ],
+          "fb": "Complete CN III ophthalmoplegia and ptosis with a normal pupil."
+        },
+        {
+          "q": "Why does ischaemia spare the pupil?",
+          "opts": [
+            "The pupillomotor fibres lie in the periphery, supplied by pial vessels, and ischaemia damages the core of the nerve",
+            "The pupillary fibres travel with the sympathetic",
+            "The pupil depends on CN VI",
+            "The ciliary ganglion resists ischaemia"
+          ],
+          "fb": "Infarction of the vasa nervorum affects the central core of the nerve. The periphery, where the parasympathetic fibres run, keeps its pial blood supply."
+        },
+        {
+          "q": "What do you watch during the first days?",
+          "opts": [
+            "The pupil: if it dilates, investigate compression immediately",
+            "Visual acuity",
+            "Intraocular pressure",
+            "Corneal sensation"
+          ],
+          "fb": "A small percentage of aneurysms present with a normal pupil. If the pupil becomes involved later, the diagnosis changes and urgent vascular imaging is required."
+        },
+        {
+          "q": "What prognosis do you expect?",
+          "opts": [
+            "Recovery in 8 to 12 weeks in most cases",
+            "Permanent palsy",
+            "Progression to other nerves",
+            "Recovery in 48 hours"
+          ],
+          "fb": "Ischaemic mononeuropathies usually recover completely within three months. If there is no improvement or other signs appear, investigate further."
+        }
+      ]
+    },
+    "ino-em": {
+      "titulo": "Double vision on turning quickly",
+      "vineta": "A 27-year-old woman with a history of optic neuritis. She notices fleeting double vision when turning quickly to the left. In primary position the eyes are aligned.",
+      "dx": "Right internuclear ophthalmoplegia (right medial longitudinal fasciculus).",
+      "preguntas": [
+        {
+          "q": "Ask for left gaze. What do you observe?",
+          "opts": [
+            "The RE does not adduct fully and the LE has abducting nystagmus",
+            "The LE does not abduct",
+            "Neither eye crosses the midline",
+            "The RE elevates"
+          ],
+          "fb": "Adduction paresis of the RE and dissociated nystagmus of the abducting eye."
+        },
+        {
+          "q": "Ask for convergence. The RE does adduct. What does this mean?",
+          "opts": [
+            "The CN III nucleus and the MR are intact: the lesion is supranuclear, in the MLF",
+            "Partial CN III palsy",
+            "Medial rectus myopathy",
+            "Malingering"
+          ],
+          "fb": "Convergence reaches the MR subnucleus by a pathway other than the MLF. If the eye converges, the problem lies in the internuclear connection."
+        },
+        {
+          "q": "Where is the lesion?",
+          "opts": [
+            "Right MLF",
+            "Left MLF",
+            "Right CN VI nucleus",
+            "Left PPRF"
+          ],
+          "fb": "An INO is named after the eye that does not adduct: the lesion is in the MLF on the same side. See it in 3D anatomy with the Brainstem layer."
+        },
+        {
+          "q": "Which investigation and cause are most likely?",
+          "opts": [
+            "Brain MRI with gadolinium; multiple sclerosis",
+            "Non-contrast CT; haemorrhage",
+            "CT angiography; aneurysm",
+            "Acetylcholine receptor antibodies; myasthenia"
+          ],
+          "fb": "In young people, especially if it is bilateral, the main cause is demyelinating. In older adults with a unilateral INO, brainstem infarction is more common. Myasthenia can mimic an INO: keep it in mind if it fluctuates."
+        }
+      ]
+    },
+    "vi-hic": {
+      "titulo": "Morning headache and double vision",
+      "vineta": "A 23-year-old woman with a BMI of 38. She has had morning headaches for 2 months, transient visual obscurations and horizontal double vision. Fundus examination shows bilateral papilloedema.",
+      "dx": "Bilateral CN VI paresis due to raised intracranial pressure (false localizing sign).",
+      "preguntas": [
+        {
+          "q": "What does motility show?",
+          "opts": [
+            "Limited abduction of both eyes with esotropia",
+            "Exotropia",
+            "Alternating hypertropia",
+            "Normal"
+          ],
+          "fb": "The esotropia increases in gaze to both sides: bilateral LR paresis."
+        },
+        {
+          "q": "Why is CN VI affected in raised intracranial pressure?",
+          "opts": [
+            "Because of its long course along the clivus and its angulation over the petrous apex, in Dorello's canal, where it is stretched",
+            "Because it is the closest to the sagittal sinus",
+            "Because it crosses the midline",
+            "Because it carries parasympathetic fibres"
+          ],
+          "fb": "As the brainstem is displaced downwards, the nerve is stretched where it is tethered beneath the petroclinoid ligament. See it in 3D anatomy."
+        },
+        {
+          "q": "What is this sign called?",
+          "opts": [
+            "False localizing sign",
+            "Marcus Gunn sign",
+            "Collier's sign",
+            "Bell's phenomenon"
+          ],
+          "fb": "The deficit does not indicate a lesion of CN VI itself, but a rise in intracranial pressure."
+        },
+        {
+          "q": "What is the initial work-up?",
+          "opts": [
+            "MRI and MR venography; if normal, lumbar puncture with opening pressure",
+            "Lumbar puncture before any imaging",
+            "Just start acetazolamide",
+            "Electromyography"
+          ],
+          "fb": "First a mass and venous thrombosis are excluded; then the lumbar puncture confirms the raised pressure with normal fluid."
+        }
+      ]
+    },
+    "seno": {
+      "titulo": "Painful ophthalmoplegia",
+      "vineta": "A 50-year-old man with right retro-orbital pain, complete ophthalmoplegia of the right eye, hypoaesthesia of the right forehead and chemosis. The right pupil measures 5 mm and does not react.",
+      "dx": "Right cavernous sinus syndrome.",
+      "preguntas": [
+        {
+          "q": "Which nerves are affected?",
+          "opts": [
+            "III, IV, VI, V1 and sympathetic",
+            "III only",
+            "III and VI",
+            "II and III"
+          ],
+          "fb": "Complete ophthalmoplegia with V1 hypoaesthesia localizes to the cavernous sinus or the superior orbital fissure. If there is also visual loss, think of the orbital apex."
+        },
+        {
+          "q": "Why is the pupil mid-sized and unreactive?",
+          "opts": [
+            "The parasympathetic fibres of CN III and the pericarotid sympathetic fibres are damaged at the same time",
+            "Only the parasympathetic fibres are damaged",
+            "It is a pharmacological mydriasis",
+            "Because of optic nerve damage"
+          ],
+          "fb": "With neither parasympathetic nor sympathetic input, the iris has no tone in either direction: a mid-sized, fixed pupil."
+        },
+        {
+          "q": "Which nerve travels inside the sinus, next to the carotid, rather than in its lateral wall?",
+          "opts": [
+            "VI",
+            "III",
+            "IV",
+            "V2"
+          ],
+          "fb": "III, IV, V1 and V2 run in the lateral wall. CN VI lies free inside the sinus, lateral to the carotid; that is why it is usually the first to be affected by cavernous aneurysms."
+        },
+        {
+          "q": "Which causes do you consider?",
+          "opts": [
+            "Carotid-cavernous fistula, septic thrombosis, tumours and Tolosa-Hunt syndrome",
+            "Multiple sclerosis",
+            "Myasthenia",
+            "Wernicke encephalopathy"
+          ],
+          "fb": "Chemosis and proptosis point to a fistula or thrombosis. Pain that responds to steroids with a compatible MRI suggests Tolosa-Hunt syndrome, a diagnosis of exclusion."
+        }
+      ]
+    },
+    "uno-medio": {
+      "titulo": "Cannot look to the right",
+      "vineta": "A 34-year-old man with multiple sclerosis. He reports double vision and difficulty looking to the right.",
+      "dx": "Right one-and-a-half syndrome (right CN VI nucleus or PPRF plus right MLF).",
+      "preguntas": [
+        {
+          "q": "Which is the only horizontal movement preserved?",
+          "opts": [
+            "Abduction of the LE",
+            "Adduction of the RE",
+            "Abduction of the RE",
+            "None"
+          ],
+          "fb": "Neither eye moves to the right (the “one”). To the left only the LE abducts, with nystagmus (the “half”)."
+        },
+        {
+          "q": "Where is the lesion?",
+          "opts": [
+            "Right PPRF or CN VI nucleus, plus right MLF",
+            "Bilateral MLF",
+            "Left CN III nucleus",
+            "Right peripheral CN VI"
+          ],
+          "fb": "The CN VI nucleus contains LR motoneurons and interneurons that cross to the contralateral MLF. Its lesion causes an ipsilateral gaze palsy; combined with a lesion of the ipsilateral MLF, adduction of that eye is lost as well."
+        },
+        {
+          "q": "Which movement confirms that the right MR is intact?",
+          "opts": [
+            "Convergence",
+            "Elevation",
+            "The pupil",
+            "The corneal reflex"
+          ],
+          "fb": "As in INO, convergence is preserved because it uses a different pathway to the medial rectus subnucleus."
+        }
+      ]
+    },
+    "horner": {
+      "titulo": "Slightly drooping eyelid and small pupil",
+      "vineta": "A 52-year-old woman, a smoker, with pain in the left shoulder and arm. Her family noticed that her left eyelid droops slightly. Ocular motility is normal.",
+      "dx": "Left Horner syndrome: rule out a tumour of the lung apex (Pancoast).",
+      "preguntas": [
+        {
+          "q": "Which pupil is the abnormal one?",
+          "opts": [
+            "The left, small (miosis)",
+            "The right, large",
+            "Both",
+            "Neither"
+          ],
+          "fb": "If the anisocoria increases in the dark, the small pupil is the one that fails to dilate: sympathetic failure."
+        },
+        {
+          "q": "Why is the ptosis mild?",
+          "opts": [
+            "Müller's muscle (sympathetic) is lost, not the levator",
+            "It is a partial CN III lesion",
+            "It is myasthenia",
+            "It is dermatochalasis"
+          ],
+          "fb": "Müller's muscle provides 1 to 2 mm of elevation. The levator, supplied by CN III, keeps working."
+        },
+        {
+          "q": "Which investigation do you request?",
+          "opts": [
+            "Imaging of the lung apex (chest X-ray or CT)",
+            "CT angiography for a PCom aneurysm",
+            "MRI for an MLF lesion",
+            "Lumbar puncture"
+          ],
+          "fb": "With shoulder and arm pain in a smoker, a preganglionic Horner syndrome demands a search for a Pancoast tumour. A painful Horner syndrome of acute onset demands that carotid dissection be ruled out."
+        }
+      ]
+    }
+  },
+  "tree": {
+    "root": {
+      "q": "Does the double vision disappear when either eye is covered?",
+      "opts": [
+        "Yes, it disappears: it is binocular",
+        "No, it persists with one eye covered"
+      ]
+    },
+    "mono": {
+      "dx": "Monocular diplopia",
+      "text": "The cause is ocular, not neurological: refractive error or astigmatism, cataract, or abnormalities of the cornea, lens or retina. If it improves with a pinhole, the origin is optical."
+    },
+    "pupil": {
+      "q": "Is there anisocoria?",
+      "opts": [
+        "Yes, mydriasis on the affected side",
+        "Yes, miosis with mild ptosis",
+        "No, pupils equal and reactive"
+      ]
+    },
+    "iiicomp": {
+      "dx": "CN III palsy with pupil involvement",
+      "text": "Eye down and out, ptosis and a fixed dilated pupil. Compression affects the peripheral pupillary fibres first: rule out a PCom aneurysm with urgent CT angiography."
+    },
+    "horner": {
+      "dx": "Horner syndrome",
+      "text": "Mild ptosis (Müller), miosis and anisocoria that is greater in the dark; motility is normal. If there is diplopia, look for another associated lesion: the cavernous sinus affects the sympathetic pathway and the ocular motor nerves at the same time."
+    },
+    "ptosis": {
+      "q": "Is there ptosis?",
+      "opts": [
+        "Yes, complete, with the eye down and out",
+        "Yes, variable and worse at the end of the day",
+        "No"
+      ]
+    },
+    "iiiisq": {
+      "dx": "Pupil-sparing CN III palsy",
+      "text": "Typical pattern of ischaemic mononeuropathy (diabetes, hypertension). Watch the pupil and expect recovery in 8 to 12 weeks; investigate if mydriasis or other deficits appear, or if it does not improve."
+    },
+    "mg": {
+      "dx": "Ocular myasthenia gravis",
+      "text": "Fluctuating, fatigable ptosis and diplopia that mimic any nerve pattern, with an always normal pupil. The ice test, fatigue on sustained upgaze and Cogan's lid twitch support the diagnosis; it is confirmed with anti-AChR or anti-MuSK antibodies and single-fibre electromyography. Look for a thymoma."
+    },
+    "dir": {
+      "q": "How are the images separated?",
+      "opts": [
+        "Horizontally (side by side)",
+        "Vertically or tilted"
+      ]
+    },
+    "horiz": {
+      "q": "What limitation do you find on ductions?",
+      "opts": [
+        "One eye does not abduct",
+        "One eye does not adduct in lateral gaze, but does converge",
+        "One eye does not adduct and the other does not abduct towards that side either",
+        "Full ductions"
+      ]
+    },
+    "vi": {
+      "q": "One eye or both?",
+      "opts": [
+        "One",
+        "Both"
+      ]
+    },
+    "vi1": {
+      "dx": "CN VI palsy",
+      "text": "Esotropia that increases towards the side of the paretic LR and at distance; face turned towards that side. In patients over 50 with vascular risk factors, the most common cause is ischaemic."
+    },
+    "vi2": {
+      "dx": "Bilateral CN VI paresis",
+      "text": "Think of raised intracranial pressure (false localizing sign), lesions of the clivus, meningitis or Wernicke encephalopathy. Check the fundus."
+    },
+    "ino": {
+      "dx": "Internuclear ophthalmoplegia",
+      "text": "Lesion of the MLF on the side of the eye that does not adduct; nystagmus of the abducting eye and preserved convergence. Young patient: multiple sclerosis. Older adult: brainstem infarct."
+    },
+    "oah": {
+      "dx": "One-and-a-half syndrome",
+      "text": "Gaze palsy to one side plus an INO on the same side: only the contralateral eye abducts. Lesion of the CN VI nucleus or the PPRF plus the ipsilateral MLF."
+    },
+    "foria": {
+      "dx": "Comitant deviation",
+      "text": "With full ductions and the same deviation in all positions, think of a decompensated phoria, convergence insufficiency or divergence insufficiency. If there are brainstem signs, consider a skew deviation."
+    },
+    "vert": {
+      "q": "How does the hypertropia behave?",
+      "opts": [
+        "It changes with gaze and with head tilt",
+        "There is vertigo, ataxia or other brainstem signs and it does not follow the pattern of a single muscle",
+        "There is mechanical restriction: orbital floor fracture or thyroid eye disease"
+      ]
+    },
+    "parks": {
+      "dx": "Palsy of a cyclovertical muscle",
+      "text": "Use the Parks-Bielschowsky three-step test to identify the muscle. The most common cause of isolated vertical diplopia is CN IV palsy."
+    },
+    "skew": {
+      "dx": "Skew deviation",
+      "text": "Supranuclear vertical deviation caused by a lesion of the otolithic pathway (brainstem or cerebellum). It often changes in the supine position and is part of HINTS in the acute vestibular syndrome: if present, it suggests a central cause."
+    },
+    "restr": {
+      "dx": "Restrictive strabismus",
+      "text": "The forced duction test is positive. In thyroid eye disease the thickened inferior rectus limits elevation; in an orbital floor fracture the inferior rectus can become entrapped. Request an orbital CT."
+    }
+  },
+  "info": {
+    "SR": {
+      "n": "Superior rectus",
+      "t": "Extraocular muscle",
+      "o": "Annulus of Zinn, superior part",
+      "i": "Sclera, 7.7 mm from the limbus",
+      "v": "CN III, superior division (the subnucleus is contralateral)",
+      "a": "Elevation; secondary intorsion; tertiary adduction. Elevates best in abduction (plane at 23°).",
+      "p": "The fibres of the SR subnucleus decussate within the CN III complex: a nuclear lesion weakens the contralateral SR."
+    },
+    "IR": {
+      "n": "Inferior rectus",
+      "t": "Extraocular muscle",
+      "o": "Annulus of Zinn, inferior part",
+      "i": "Sclera, 6.5 mm from the limbus",
+      "v": "CN III, inferior division",
+      "a": "Depression; secondary extorsion; tertiary adduction. Depresses best in abduction.",
+      "p": "It is the muscle most often affected in thyroid eye disease and the one that can become entrapped in an orbital floor fracture."
+    },
+    "MR": {
+      "n": "Medial rectus",
+      "t": "Extraocular muscle",
+      "o": "Annulus of Zinn, medial part",
+      "i": "Sclera, 5.5 mm from the limbus (the closest)",
+      "v": "CN III, inferior division",
+      "a": "Pure adduction.",
+      "p": "In INO it does not adduct in lateral gaze but does so in convergence: the convergence pathway does not run through the MLF."
+    },
+    "LR": {
+      "n": "Lateral rectus",
+      "t": "Extraocular muscle",
+      "o": "Annulus of Zinn (two heads bridging the superior orbital fissure)",
+      "i": "Sclera, 6.9 mm from the limbus",
+      "v": "CN VI (abducens)",
+      "a": "Pure abduction.",
+      "p": "LR6: the only muscle supplied by CN VI. Its palsy causes an esotropia that is worse at distance and towards the affected side."
+    },
+    "SO": {
+      "n": "Superior oblique",
+      "t": "Extraocular muscle",
+      "o": "Body of the sphenoid, superomedial to the optic canal",
+      "i": "Posterior sclera, superotemporal quadrant, after passing through the trochlea",
+      "v": "CN IV (trochlear), on its superior surface",
+      "a": "Intorsion; secondary depression; tertiary abduction. Depresses best in adduction (plane at 51°).",
+      "p": "SO4. Its palsy causes a hypertropia that increases in contralateral gaze, in downgaze and on head tilt towards the affected side."
+    },
+    "IO": {
+      "n": "Inferior oblique",
+      "t": "Extraocular muscle",
+      "o": "Anteromedial orbital floor (maxilla), next to the lacrimal fossa",
+      "i": "Posterior sclera, inferotemporal quadrant, near the macula",
+      "v": "CN III, inferior division",
+      "a": "Extorsion; secondary elevation; tertiary abduction. Elevates best in adduction.",
+      "p": "It is the only extraocular muscle that does not arise at the apex. Its nerve carries the motor root of the ciliary ganglion."
+    },
+    "LPS": {
+      "n": "Levator palpebrae superioris",
+      "t": "Eyelid muscle",
+      "o": "Lesser wing of the sphenoid, above the annulus of Zinn",
+      "i": "Aponeurosis into the tarsal plate and the skin of the upper eyelid",
+      "v": "CN III, superior division (central caudal nucleus, single and bilateral)",
+      "a": "Raises the upper eyelid.",
+      "p": "Because the central caudal nucleus is single, a nuclear CN III lesion causes bilateral ptosis."
+    },
+    "globe": {
+      "n": "Eyeball",
+      "t": "Organ",
+      "o": "—",
+      "i": "—",
+      "v": "—",
+      "a": "Rotates about its centre; the visual axis passes through the fovea.",
+      "p": "It measures about 24 mm. The red mark at 12 o'clock on the limbus shows intorsion and extorsion."
+    },
+    "optic": {
+      "n": "Optic nerve (II)",
+      "t": "Sensory cranial nerve",
+      "o": "Retinal ganglion cells",
+      "i": "Optic chiasm",
+      "v": "—",
+      "a": "Carries visual information.",
+      "p": "It passes through the optic canal inside the annulus of Zinn. Its involvement together with III, IV and VI localizes to the orbital apex."
+    },
+    "annulus": {
+      "n": "Annulus of Zinn",
+      "t": "Common tendon",
+      "o": "—",
+      "i": "—",
+      "v": "—",
+      "a": "Origin of the four recti.",
+      "p": "Through it pass II, III (both divisions), VI and the nasociliary nerve. Outside it, in the superior orbital fissure, pass IV and the frontal and lacrimal nerves."
+    },
+    "trochlea": {
+      "n": "Trochlea",
+      "t": "Fibrocartilaginous pulley",
+      "o": "Trochlear fossa of the frontal bone",
+      "i": "—",
+      "v": "—",
+      "a": "Changes the direction of pull of the superior oblique.",
+      "p": "From the trochlea the SO tendon runs backwards and laterally: that is why its action depends on the horizontal position of the eye."
+    },
+    "sof": {
+      "n": "Superior orbital fissure",
+      "t": "Skull base opening",
+      "o": "—",
+      "i": "—",
+      "v": "—",
+      "a": "Connects the middle cranial fossa with the orbit.",
+      "p": "Its syndrome affects III, IV, VI and V1 without visual loss; with visual loss it is orbital apex syndrome."
+    },
+    "bone": {
+      "n": "Bony orbit",
+      "t": "Bone",
+      "o": "—",
+      "i": "—",
+      "v": "—",
+      "a": "A pyramid about 45 mm deep.",
+      "p": "The medial walls are almost parallel and the lateral walls diverge about 90° from each other; the orbital axis diverges about 23° from the visual axis."
+    },
+    "III": {
+      "n": "CN III · trunk",
+      "t": "Oculomotor nerve",
+      "o": "CN III nuclear complex in the midbrain, at the level of the superior colliculus",
+      "i": "SR, levator, MR, IR, IO and iris sphincter (via the ciliary ganglion)",
+      "v": "—",
+      "a": "Exits at the interpeduncular fossa, passes between the PCA and the SCA, runs alongside the PCom and enters the lateral wall of the cavernous sinus.",
+      "p": "The pupillary fibres lie in the periphery: compression (aneurysm, uncal herniation) dilates the pupil; ischaemia usually spares it."
+    },
+    "IIIsup": {
+      "n": "CN III · superior division",
+      "t": "Branch",
+      "o": "Division in the anterior cavernous sinus or the superior orbital fissure",
+      "i": "Superior rectus and levator palpebrae",
+      "v": "—",
+      "a": "Enters the ocular surface of the SR and passes through it to reach the levator.",
+      "p": "An isolated lesion causes ptosis and an elevation deficit."
+    },
+    "IIIinf": {
+      "n": "CN III · inferior division",
+      "t": "Branch",
+      "o": "Division in the anterior cavernous sinus or the superior orbital fissure",
+      "i": "Medial rectus, inferior rectus, inferior oblique and motor root of the ciliary ganglion",
+      "v": "—",
+      "a": "Runs below the optic nerve and branches within the muscle cone.",
+      "p": "Its lesion causes exotropia, deficits of adduction and depression, and mydriasis, with a normal eyelid."
+    },
+    "cil": {
+      "n": "Ciliary ganglion",
+      "t": "Parasympathetic ganglion",
+      "o": "Motor root from the nerve to the inferior oblique",
+      "i": "Short ciliary nerves to the iris sphincter and the ciliary muscle",
+      "v": "—",
+      "a": "Relay of the pupillary and accommodation pathway.",
+      "p": "Damage to it produces an Adie tonic pupil: slow reaction to light and a better response to convergence."
+    },
+    "IV": {
+      "n": "CN IV (trochlear)",
+      "t": "Motor cranial nerve",
+      "o": "Contralateral CN IV nucleus, at the level of the inferior colliculus",
+      "i": "Superior oblique, on its orbital surface",
+      "v": "—",
+      "a": "Exits from the dorsal surface, curves around the midbrain, runs in the lateral wall of the cavernous sinus below CN III and enters the orbit outside the annulus of Zinn.",
+      "p": "It is the thinnest nerve, the one with the longest intracranial course, and the only one that decussates completely and exits dorsally."
+    },
+    "VI": {
+      "n": "CN VI (abducens)",
+      "t": "Motor cranial nerve",
+      "o": "CN VI nucleus in the floor of the fourth ventricle (under the facial colliculus)",
+      "i": "Lateral rectus, on its ocular surface",
+      "v": "—",
+      "a": "Exits at the pontomedullary junction, ascends along the clivus, passes through Dorello's canal and crosses the cavernous sinus unattached, lateral to the carotid.",
+      "p": "Because of its long course it is affected as a false localizing sign in raised intracranial pressure."
+    },
+    "dorello": {
+      "n": "Dorello's canal",
+      "t": "Anatomical landmark",
+      "o": "—",
+      "i": "—",
+      "v": "—",
+      "a": "Space beneath the petroclinoid (Gruber's) ligament through which CN VI crosses the petrous apex.",
+      "p": "Here CN VI is angled and stretched when intracranial pressure rises."
+    },
+    "MLF": {
+      "n": "Medial longitudinal fasciculus",
+      "t": "Internuclear pathway",
+      "o": "Interneurons of the contralateral CN VI nucleus",
+      "i": "Medial rectus subnucleus in the CN III complex",
+      "v": "—",
+      "a": "Coordinates conjugate horizontal gaze: when the LR of one eye abducts, the MR of the other adducts.",
+      "p": "Its lesion produces internuclear ophthalmoplegia on the side of the lesion."
+    },
+    "n3nuc": {
+      "n": "CN III nuclear complex",
+      "t": "Motor nucleus",
+      "o": "Midbrain, ventral to the aqueduct, at the level of the superior colliculus",
+      "i": "—",
+      "v": "—",
+      "a": "Subnuclei for the ipsilateral MR, IR and IO, for the contralateral SR, and the central caudal nucleus (levators, bilateral).",
+      "p": "A nuclear lesion causes bilateral ptosis and weakness of the contralateral SR."
+    },
+    "ew": {
+      "n": "Edinger-Westphal nucleus",
+      "t": "Parasympathetic nucleus",
+      "o": "Dorsal to the CN III complex",
+      "i": "Ciliary ganglion",
+      "v": "—",
+      "a": "Miosis and accommodation.",
+      "p": "It receives the pretectal pathway of the light reflex from both sides."
+    },
+    "n4nuc": {
+      "n": "CN IV nucleus",
+      "t": "Motor nucleus",
+      "o": "Midbrain, at the level of the inferior colliculus",
+      "i": "Superior oblique of the opposite side",
+      "v": "—",
+      "a": "Its fibres decussate in the superior medullary velum.",
+      "p": "The right SO depends on the left CN IV nucleus."
+    },
+    "n6nuc": {
+      "n": "CN VI nucleus",
+      "t": "Motor nucleus and gaze centre",
+      "o": "Dorsal pons, encircled by the genu of the facial nerve",
+      "i": "Ipsilateral LR and, via interneurons and the MLF, the contralateral MR",
+      "v": "—",
+      "a": "Generates conjugate horizontal gaze.",
+      "p": "Its lesion does not cause a CN VI palsy but a gaze palsy towards that side."
+    },
+    "pprf": {
+      "n": "Paramedian pontine reticular formation",
+      "t": "Premotor centre",
+      "o": "Pons",
+      "i": "Ipsilateral CN VI nucleus",
+      "v": "—",
+      "a": "Generates horizontal saccades.",
+      "p": "PPRF plus ipsilateral MLF: one-and-a-half syndrome."
+    },
+    "brainstem": {
+      "n": "Brainstem",
+      "t": "Central nervous system",
+      "o": "—",
+      "i": "—",
+      "v": "—",
+      "a": "Midbrain (III and IV), pons (VI) and medulla.",
+      "p": "Syndromes involving the ocular motor nerves: Weber (III + contralateral hemiparesis), Benedikt (III + tremor), Millard-Gubler (VI + VII + hemiparesis)."
+    },
+    "ica": {
+      "n": "Internal carotid artery",
+      "t": "Artery",
+      "o": "Common carotid",
+      "i": "Middle and anterior cerebral arteries",
+      "v": "—",
+      "a": "Forms the carotid siphon inside the cavernous sinus.",
+      "p": "Its sympathetic plexus carries the pupillodilator pathway: carotid dissection causes a painful Horner syndrome."
+    },
+    "pcom": {
+      "n": "Posterior communicating artery",
+      "t": "Artery",
+      "o": "Supraclinoid internal carotid",
+      "i": "Posterior cerebral artery",
+      "v": "—",
+      "a": "Joins the anterior and posterior circulations.",
+      "p": "An aneurysm at its origin compresses CN III: CN III palsy with mydriasis."
+    },
+    "pca": {
+      "n": "Posterior cerebral artery",
+      "t": "Artery",
+      "o": "Basilar bifurcation",
+      "i": "Occipital lobe",
+      "v": "—",
+      "a": "CN III passes between it and the superior cerebellar artery.",
+      "p": "Classic landmark for the cisternal course of CN III."
+    },
+    "sca": {
+      "n": "Superior cerebellar artery",
+      "t": "Artery",
+      "o": "Distal basilar",
+      "i": "Superior cerebellum",
+      "v": "—",
+      "a": "Runs below CN III.",
+      "p": "CN III lies in the pincer between the PCA and the SCA."
+    },
+    "basilar": {
+      "n": "Basilar artery",
+      "t": "Artery",
+      "o": "Junction of the vertebral arteries",
+      "i": "Posterior cerebral arteries",
+      "v": "—",
+      "a": "Runs along the ventral surface of the pons.",
+      "p": "Basilar tip aneurysms can compress CN III in the interpeduncular fossa."
+    },
+    "cs": {
+      "n": "Cavernous sinus",
+      "t": "Dural venous sinus",
+      "o": "—",
+      "i": "—",
+      "v": "—",
+      "a": "On each side of the sella turcica. In its lateral wall: III, IV, V1 and V2. Inside: internal carotid and VI.",
+      "p": "Syndrome: painful ophthalmoplegia, V1 hypoaesthesia, Horner syndrome and a mid-sized fixed pupil."
+    },
+    "symp": {
+      "n": "Pericarotid sympathetic plexus",
+      "t": "Sympathetic pathway",
+      "o": "Superior cervical ganglion",
+      "i": "Iris dilator and Müller's muscle",
+      "v": "—",
+      "a": "Ascends on the internal carotid; in the cavernous sinus it briefly joins CN VI and then the nasociliary nerve.",
+      "p": "Its lesion causes Horner syndrome: mild ptosis, miosis and variable anhidrosis."
+    },
+    "aneur": {
+      "n": "PCom aneurysm",
+      "t": "Lesion",
+      "o": "—",
+      "i": "—",
+      "v": "—",
+      "a": "Saccular dilatation at the junction of the carotid and the posterior communicating artery.",
+      "p": "It compresses the periphery of CN III: painful palsy with mydriasis. It is an emergency."
+    }
+  }
+}
